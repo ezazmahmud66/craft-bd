@@ -1,0 +1,76 @@
+name: Bug Report
+description: Report a defect or unexpected behavior in Craft BD
+title: "[BUG] "
+labels:
+  - "type: bug"
+
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug Summary
+      description: Briefly describe the problem.
+      placeholder: Describe what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Explain how the problem can be reproduced.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Enter ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Mention browser, device, operating system, or application environment.
+      placeholder: Example: Chrome 140, Windows 11, Development environment
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Add screenshots, error messages, logs, or other useful evidence.
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Feature or Issue
+      description: Add related issue numbers if available.
+      placeholder: Example: #12
