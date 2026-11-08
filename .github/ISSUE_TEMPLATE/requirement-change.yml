@@ -1,0 +1,73 @@
+name: Requirement Change
+description: Request a change to an existing requirement in Craft BD
+title: "[REQUIREMENT CHANGE] "
+labels:
+  - "area: requirements"
+
+body:
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Requirement
+      description: Describe the existing requirement that needs to change.
+      placeholder: Example: The system shall allow customers to submit custom orders.
+    validations:
+      required: true
+
+  - type: textarea
+    id: requested
+    attributes:
+      label: Requested Change
+      description: Describe the proposed change.
+      placeholder: Explain exactly what should be added, removed, or modified.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason for Change
+      description: Why is this change needed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact Analysis
+      description: Identify areas that may be affected.
+      placeholder: |
+        - UI:
+        - Backend:
+        - Database:
+        - API:
+        - Testing:
+        - Documentation:
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical
+    validations:
+      required: true
+
+  - type: textarea
+    id: approval
+    attributes:
+      label: Approval / Decision
+      description: Record faculty, product owner, or team decision when available.
+      placeholder: Pending / Approved / Rejected
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Issue or Requirement
+      description: Add related issue numbers, requirement IDs, or documentation references.
+      placeholder: Example: FR-18, #25
