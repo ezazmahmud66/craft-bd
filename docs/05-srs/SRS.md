@@ -4455,56 +4455,807 @@ If validated, the custom-order module represents a strong Software Engineering c
 **Primary Research Dependency:** Critical  
 **Next Module:** Notifications, Verification, Certificate & Administration
 
-## 4.11 Notifications
+## 4.11 Notification Requirements
 
-Requirements:
+The notification module provides awareness of meaningful system events.
 
-`FR-NOTIF-*`
+Notifications shall support workflows rather than become the authoritative source of order or custom-order state.
 
-[To be completed]
+The MVP does not require:
 
----
+- SMS notifications
+- Native push notifications
+- Real-time messaging infrastructure
 
-## 4.12 QR / Product Verification Record
-
-Requirements:
-
-`FR-VERIFY-*`
-
-[To be completed]
-
-Important boundary:
-
-A Craft BD QR-linked record represents a platform record and shall not automatically be described as proof of physical-product authenticity.
+Basic in-app notifications or dashboard alerts are sufficient.
 
 ---
 
-## 4.13 Platform Certificate
+### FR-NOTIF-001 — Notify Artisan of New Custom Request
 
-Requirements:
+**Statement**
 
-`FR-CERT-*`
+The system shall make the assigned artisan aware when a new custom-order request requiring artisan review has been submitted.
 
-[To be completed]
+**Actor:** Artisan  
+**Priority:** Should  
+**Status:** DRAFT
 
-This module remains optional.
+**Acceptance Criteria**
 
----
+A new custom request shall generate an appropriate notification or pending-action indicator for the correct assigned artisan.
 
-## 4.14 Administration
-
-Requirements:
-
-`FR-ADMIN-*`
-
-[To be completed]
-
-Administration follows the principle:
-
-**Admin by Exception**
+Another artisan shall not receive private request information without authorization.
 
 ---
 
+### FR-NOTIF-002 — Notify Customer of Available Quotation
+
+**Statement**
+
+The system shall make the request owner aware when an artisan submits a quotation for their custom-order request.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+**Acceptance Criteria**
+
+The notification shall be associated with the correct request owner.
+
+---
+
+### FR-NOTIF-003 — Notify Artisan of Quotation Approval
+
+**Statement**
+
+The system shall make the assigned artisan aware when the customer approves a quotation.
+
+**Actor:** Artisan  
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### FR-NOTIF-004 — Notify Artisan of Quotation Rejection
+
+**Statement**
+
+The system shall make the assigned artisan aware when the customer rejects a quotation.
+
+**Actor:** Artisan  
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### FR-NOTIF-005 — Notify Customer of Relevant Status Change
+
+**Statement**
+
+The system shall make the customer aware when an important standard-order or custom-order status relevant to them changes.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+Meaningful events may include:
+
+- Production started
+- Ready to ship
+- Shipped
+- Delivered
+
+The exact notification-event list will be finalized during workflow design.
+
+---
+
+### FR-NOTIF-006 — View Notifications
+
+**Statement**
+
+The system shall allow an authenticated user to view notifications associated with their own account.
+
+**Actors:**
+
+- Customer
+- Artisan
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Requirements:**
+
+- `BR-NOTIF-001`
+- `SR-OWN-005`
+
+**Acceptance Criteria**
+
+User A shall not be able to retrieve User B's private notifications through normal functionality.
+
+---
+
+### FR-NOTIF-007 — Mark Notification as Read
+
+**Statement**
+
+The system shall allow an authenticated user to mark an owned notification as read where notification read-state functionality is implemented.
+
+**Priority:** Could / Should  
+**Status:** DRAFT
+
+---
+
+## 4.11.1 Notification Principle
+
+Notifications should primarily represent:
+
+```text
+Action Required
+      or
+Meaningful Status Change
+```
+
+The system should avoid unnecessary alerts for insignificant internal events.
+
+Example:
+
+```text
+Quotation Submitted
+        ↓
+Customer Notification
+```
+
+However:
+
+```text
+Notification Missing
+```
+
+shall not mean:
+
+```text
+Quotation Missing
+```
+
+The business record remains authoritative.
+
+---
+
+# 4.12 QR / Product Verification Record Requirements
+
+## 4.12.1 Verification Scope
+
+The verification module is intended to provide access to a Craft BD-maintained platform record.
+
+Current model:
+
+```text
+QR Code
+   ↓
+Craft BD Verification URL
+   ↓
+Product / Verification Record
+```
+
+A QR-linked Craft BD record shall not automatically be interpreted as independent proof that the physical item itself is authentic.
+
+---
+
+### FR-VERIFY-001 — Generate Verification Identifier
+
+**Statement**
+
+The system shall allow an authorized process to assign a unique verification identifier to an eligible Craft BD product record.
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-VERIFY-003`
+
+**Acceptance Criteria**
+
+An active verification identifier shall uniquely resolve to its intended Craft BD verification record.
+
+---
+
+### FR-VERIFY-002 — Generate QR-Linked Verification Reference
+
+**Statement**
+
+The system shall allow an authorized process to generate a QR code or equivalent scannable reference linked to an eligible Craft BD verification record.
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+**Acceptance Criteria**
+
+Opening a valid generated verification reference shall lead to the corresponding Craft BD record.
+
+---
+
+### FR-VERIFY-003 — View Verification Record
+
+**Statement**
+
+The system shall allow a user to view approved public information associated with a valid verification identifier.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+Possible public information may include:
+
+- Product identifier
+- Product name
+- Artisan
+- Region
+- Craft type
+- Materials
+- Approved production information
+- Platform certificate information where implemented
+
+**Related Rule:** `BR-VERIFY-001`
+
+---
+
+### FR-VERIFY-004 — Handle Invalid Verification Identifier
+
+**Statement**
+
+The system shall clearly indicate when a requested verification identifier does not correspond to an active valid Craft BD verification record.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Security:** `SR-VERIFY-002`
+
+**Acceptance Criteria**
+
+An invalid identifier shall:
+
+- Return an appropriate invalid/not-found result
+- Not expose unrelated product records
+- Not expose private information
+
+---
+
+### FR-VERIFY-005 — Manage Verification Record Status
+
+**Statement**
+
+The system shall allow an authorized administrator to manage the approved status of a verification record where the verification module is implemented.
+
+**Actor:** Administrator  
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+Possible administrative actions may include:
+
+- Activate
+- Deactivate
+- Review record status
+
+---
+
+## 4.12.2 Verification Trust Boundary
+
+Correct interpretation:
+
+```text
+Valid QR
+   ↓
+Valid Craft BD Platform Record
+```
+
+Incorrect unsupported interpretation:
+
+```text
+Valid QR
+   ↓
+Guaranteed Authentic Physical Product
+```
+
+Craft BD shall not make the second claim unless a reliable external or physical authentication mechanism is introduced through approved requirement change.
+
+---
+
+# 4.13 Platform Certificate Requirements
+
+## 4.13.1 Certificate Scope
+
+The certificate module is currently:
+
+**Could Have / Optional**
+
+If implemented, the system provides a:
+
+```text
+Craft BD Platform Certificate Record
+```
+
+It does not automatically provide:
+
+- Government certification
+- Legal authenticity certification
+- Independent third-party certification
+
+---
+
+### FR-CERT-001 — Create Platform Certificate Record
+
+**Statement**
+
+The system shall allow an authorized administrator to create a Craft BD platform certificate record for an eligible product.
+
+**Actor:** Administrator  
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CERT-001`
+
+---
+
+### FR-CERT-002 — Assign Unique Certificate Identifier
+
+**Statement**
+
+The system shall assign a unique identifier to each valid Craft BD certificate record.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CERT-003`
+
+---
+
+### FR-CERT-003 — View Certificate Record
+
+**Statement**
+
+The system shall allow permitted users to view approved public information associated with an active Craft BD certificate record.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CERT-002`
+
+---
+
+### FR-CERT-004 — Link Certificate to Product
+
+**Statement**
+
+The system shall associate a valid Craft BD certificate record with the relevant eligible product record.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CERT-004`
+
+---
+
+### FR-CERT-005 — Deactivate or Revoke Certificate Record
+
+**Statement**
+
+The system shall allow an authorized administrator to deactivate or revoke a Craft BD platform certificate record according to approved platform rules.
+
+**Actor:** Administrator  
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+Historical information required for audit or record consistency shall not be silently destroyed.
+
+---
+
+## 4.13.2 Certificate Scope Protection
+
+If project schedule becomes constrained:
+
+```text
+Certificate Module
+      ↓
+Defer First
+```
+
+before reducing:
+
+```text
+Security
+Core Orders
+Custom Workflow*
+Testing
+Deployment
+```
+
+`* Subject to primary research validation.`
+
+---
+
+# 4.14 Administration Requirements
+
+## 4.14.1 Administration Principle
+
+Craft BD administration follows:
+
+```text
+Normal Valid Workflow
+      ↓
+Customer / Artisan
+```
+
+and:
+
+```text
+Governance / Exception
+      ↓
+Administrator
+```
+
+The administrator shall not automatically approve every normal transaction.
+
+---
+
+### FR-ADMIN-001 — View User Accounts
+
+**Statement**
+
+The system shall allow an authorized administrator to view permitted user-account information required for approved platform administration.
+
+**Actor:** Administrator  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Privacy Boundary**
+
+Only information necessary for approved administrative purposes shall be exposed.
+
+---
+
+### FR-ADMIN-002 — Manage User Status
+
+**Statement**
+
+The system shall allow an authorized administrator to perform approved user-account status actions.
+
+**Actor:** Administrator  
+**Priority:** Must  
+**Status:** DRAFT
+
+Possible actions may include:
+
+- Activate
+- Deactivate
+
+**Related Security:** `SR-ADMIN-*`
+
+---
+
+### FR-ADMIN-003 — Create Category
+
+**Statement**
+
+The system shall allow an authorized administrator to create a valid product category.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### FR-ADMIN-004 — Update Category
+
+**Statement**
+
+The system shall allow an authorized administrator to modify approved information for an existing product category.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### FR-ADMIN-005 — Deactivate Category
+
+**Statement**
+
+The system shall allow an authorized administrator to deactivate a category according to approved data-integrity rules.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Rule:** `BR-ADMIN-005`
+
+**Acceptance Criteria**
+
+Deactivating a category shall not silently destroy historical product or order information.
+
+---
+
+## 4.14.2 Content Moderation Requirements
+
+### FR-ADMIN-006 — Moderate Product Content
+
+**Statement**
+
+The system shall allow an authorized administrator to perform approved moderation actions on product content that violates platform rules.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### FR-ADMIN-007 — Moderate Artisan Profile Content
+
+**Statement**
+
+The system shall allow an authorized administrator to perform approved moderation actions on artisan-profile content that violates platform rules.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### FR-ADMIN-008 — Moderate Reviews
+
+**Statement**
+
+The system shall allow an authorized administrator to moderate reviews according to approved platform rules.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+This requirement supports the same administration capability referenced by `FR-REV-005`.
+
+The implementation should avoid duplicating the underlying moderation logic.
+
+---
+
+## 4.14.3 Verification Administration
+
+### FR-ADMIN-009 — Manage Verification Records
+
+**Statement**
+
+The system shall allow an authorized administrator to manage Craft BD verification records where the verification module is implemented.
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+---
+
+### FR-ADMIN-010 — Manage Certificate Records
+
+**Statement**
+
+The system shall allow an authorized administrator to manage Craft BD platform certificate records where the certificate module is implemented.
+
+**Priority:** Could — Conditional  
+**Status:** PROVISIONAL
+
+---
+
+## 4.14.4 Exceptional Order Administration
+
+### FR-ADMIN-011 — View Order for Authorized Support
+
+**Statement**
+
+The system shall allow an authorized administrator to view permitted order information where required for approved support or governance purposes.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Administrative access shall remain subject to approved authorization and privacy rules.
+
+---
+
+### FR-ADMIN-012 — Perform Approved Exceptional Order Action
+
+**Statement**
+
+The system shall allow an authorized administrator to perform only specifically approved exceptional order actions where normal workflow cannot resolve the issue.
+
+**Priority:** Should / Could  
+**Status:** DRAFT
+
+This requirement does not grant unrestricted order manipulation.
+
+Specific exceptional actions shall be defined before implementation.
+
+---
+
+## 4.14.5 Administrative Authorization
+
+Administrative access shall require:
+
+```text
+Authenticated
+      +
+ADMIN Role
+      +
+Approved Permission
+      +
+Relevant Business Rule
+```
+
+The following is insufficient:
+
+```text
+Admin Button Hidden from Customer
+```
+
+because frontend visibility is not an authorization control.
+
+Related requirements include:
+
+- `BR-ADMIN-001`
+- `BR-ADMIN-003`
+- `SR-ADMIN-001`
+- `SR-ADMIN-002`
+
+---
+
+## 4.14.6 Administrative Auditability
+
+High-impact administrative actions should be traceable where practical.
+
+Candidate actions include:
+
+- User deactivation
+- Content moderation
+- Review moderation
+- Verification deactivation
+- Certificate revocation
+- Exceptional order action
+
+Related:
+
+`SR-LOG-003`
+
+---
+
+# 4.15 Functional Scope Summary
+
+The complete functional-requirement structure is now:
+
+| Module | Requirement IDs | Current Position |
+|---|---|---|
+| Authentication | FR-AUTH-001–005 | Must |
+| Customer Profile | FR-USER-001–002 | Should |
+| Artisan | FR-ART-001–004 | Must |
+| Product | FR-PROD-001–010 | Must / Should |
+| Discovery | FR-DISC-001–008 | Must / Should / Provisional |
+| Craft Context | FR-CRAFT-001–002 | Provisional Should |
+| Cart | FR-CART-001–005 | Must |
+| Standard Order | FR-ORDER-001–016 | Must / Should |
+| Review | FR-REV-001–005 | Should |
+| Custom Order | FR-CUSTOM-001–038 | Provisional Must / Supporting |
+| Notifications | FR-NOTIF-001–007 | Should |
+| Verification | FR-VERIFY-001–005 | Conditional Should |
+| Certificate | FR-CERT-001–005 | Could |
+| Administration | FR-ADMIN-001–012 | Must / Should / Conditional |
+
+---
+
+# 4.16 Deferred Functional Scope
+
+The following capabilities remain outside the current mandatory MVP:
+
+- Product comparison
+- Advanced personalized recommendation
+- Gift recommendation engine
+- Event/workshop management
+- Real-time customer-artisan chat
+- Real payment processing
+- Courier API integration
+- Blockchain-based verification
+- Native mobile application
+- External certification authority integration
+- Advanced analytics
+
+These capabilities shall not be treated as implementation commitments unless approved through requirement change control.
+
+---
+
+# 4.17 Functional Requirement Security Principle
+
+All protected functional requirements remain subject to:
+
+```text
+Authentication
+      ↓
+Authorization
+      ↓
+Ownership / Assignment
+      ↓
+Business Rule
+      ↓
+Input Validation
+      ↓
+Operation
+```
+
+A functional requirement describes system behavior.
+
+It does not override applicable security, privacy, data-integrity, or business-rule requirements.
+
+---
+
+# 4.18 Functional Requirement Validation Boundary
+
+Requirements fall into three broad categories.
+
+### Controlled Core
+
+Examples:
+
+- Authentication
+- Product management
+- Standard ordering
+- Core administration
+- Security enforcement
+
+### Research-Dependent / Provisional
+
+Examples:
+
+- Structured custom-order importance
+- Craft-context value
+- Material/craft-type discovery
+- QR-linked product record value
+
+### Optional / Conditional
+
+Examples:
+
+- Certificate records
+- Selected notifications
+- Verification management
+
+Primary research findings may change provisional requirements through the approved change-control process.
+
+---
+
+# 4.19 Section 4 Completion Status
+
+The SRS now contains the full functional requirement baseline covering:
+
+```text
+AUTH
+USER
+ART
+PROD
+DISC
+CRAFT
+CART
+ORDER
+REV
+CUSTOM
+NOTIF
+VERIFY
+CERT
+ADMIN
+```
+
+No requirement identifier has been intentionally renumbered from the Phase 04 baseline.
+
+---
+
+## Section Status
+
+**Section:** 4 — Functional Requirements  
+**Status:** Draft v0.1 Complete  
+**Requirement Source:** Phase 04 Requirement Baseline v0.1  
+**Requirement IDs Changed:** No  
+**Unsupported New Features Added:** No  
+**Primary Research Dependency:** Preserved  
+**Next Section:** Business Rules
 # 5. Business Rules
 
 Business rules defined during Phase 04 will be referenced using:
