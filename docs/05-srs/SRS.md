@@ -1333,65 +1333,735 @@ The success of the academic MVP should therefore be evaluated by the completenes
 
 # 3. External Interface Requirements
 
-## 3.1 User Interface Requirements
+## 3.1 Purpose
 
-[To be completed]
+This section defines how Craft BD users and approved external systems interact with the software.
 
-This section will describe interface-level requirements for:
+The section covers:
 
-- Public pages
-- Customer interfaces
-- Artisan interfaces
-- Administrator interfaces
-- Responsive layouts
-- Form validation
-- Feedback messages
+- User interfaces
+- Application/API interfaces
+- Data-storage interfaces
+- File-storage interfaces
+- Communication interfaces
+- Optional external-service interfaces
 
-Detailed visual design will be handled during the UI/UX phase.
-
----
-
-## 3.2 Software Interfaces
-
-[To be completed]
-
-Possible interfaces include:
-
-- Backend API
-- Relational database
-- File/image storage
-- Optional email service
-- Future payment gateway
-
-Only approved integrations will be specified as implementation dependencies.
+Detailed visual design, endpoint definitions, and provider-specific configurations will be completed during later UI/UX, architecture, API, and deployment phases.
 
 ---
 
-## 3.3 Communication Interfaces
+## 3.2 User Interface Requirements
 
-[To be completed]
+Craft BD shall provide a responsive web-based user interface.
 
-This section will cover application communication requirements such as:
+The interface shall support the approved Customer, Artisan, Administrator, and public workflows.
 
-- HTTPS
-- Client-server communication
-- API request/response conventions
+The interface design shall follow the relevant usability requirements defined under `NFR-USE-*`.
 
 ---
 
-## 3.4 External Service Boundaries
+## 3.3 Public User Interface
 
-[To be completed]
+Users who are not authenticated may access approved public information.
 
-Explicitly deferred or optional services will include:
+Potential public interfaces include:
 
-- Real payment provider
-- Courier API
-- External certification authority
-- External analytics
-- Email provider
+- Home / landing page
+- Product catalog
+- Product details
+- Category browsing
+- Product search
+- Public artisan profiles
+- Public craft-context information where available
+- Published product reviews
+- QR-linked public verification records where implemented
+
+Private account or transaction information shall not be exposed through public interfaces.
 
 ---
+
+## 3.4 Customer Interface
+
+Authenticated customers shall receive access to Customer-authorized functions.
+
+The customer interface may include:
+
+### Account
+
+- Login/logout
+- Customer profile
+- Account information
+
+### Product Discovery
+
+- Browse products
+- Search
+- Filter
+- Product details
+- Artisan profile
+- Craft information where supported
+
+### Standard Commerce
+
+- Shopping cart
+- Checkout
+- Order confirmation
+- Order history where implemented
+- Order details
+- Order-status tracking
+- Simulated payment status
+
+### Custom Order
+
+Where the provisional custom-order module is included:
+
+- Create custom request
+- Enter customization details
+- Upload reference image
+- View submitted requests
+- View quotation
+- Approve/reject quotation
+- Track custom-order status
+
+### Reviews
+
+Where the customer is eligible:
+
+- Submit product rating
+- Submit product review
+
+### Notifications
+
+Where implemented:
+
+- View relevant notifications
+- View important order/custom-order updates
+
+---
+
+## 3.5 Artisan Interface
+
+Authenticated artisans shall receive access to approved Artisan functions.
+
+The artisan interface may include:
+
+### Artisan Profile
+
+- View own profile
+- Update own permitted profile information
+- View associated products
+
+### Product Management
+
+- Create product
+- Edit owned product
+- Deactivate owned product
+- Maintain price
+- Maintain stock
+- Upload product images
+- Assign supported product information
+
+### Standard Order Operations
+
+Where artisan-side standard-order management is required:
+
+- View relevant orders
+- Perform authorized order-status updates
+
+### Custom Order Operations
+
+Where the structured custom-order module is included:
+
+- View assigned custom requests
+- View submitted customer requirements
+- Mark request under review
+- Reject eligible request
+- Create quotation
+- Submit quotation
+- View customer decision
+- Update approved production statuses
+
+The interface should minimize unnecessary data-entry and administrative burden.
+
+---
+
+## 3.6 Administrator Interface
+
+The administrator interface shall be restricted to authenticated and authorized administrators.
+
+Potential administrator functionality includes:
+
+- View approved user-account information
+- Activate/deactivate user status
+- Create/update/deactivate categories
+- Moderate product content
+- Moderate artisan-profile content
+- Moderate reviews
+- View approved order information for support
+- Perform approved exceptional actions
+- Manage verification records where implemented
+- Manage certificate records where implemented
+
+The administrator interface shall follow the principle:
+
+```text
+Admin by Exception
+```
+
+Normal customer-artisan interactions should not require unnecessary administrator involvement.
+
+---
+
+## 3.7 Responsive Interface Requirements
+
+The user interface shall support both desktop and mobile browser layouts.
+
+Core workflow access should remain available at approved desktop and mobile viewport sizes.
+
+Responsive behavior shall be tested for selected workflows including:
+
+- Login
+- Product browsing
+- Product details
+- Cart
+- Checkout
+- Custom-order submission
+- Artisan request management
+- Administrator core operations
+
+A native mobile application is not required for the initial MVP.
+
+---
+
+## 3.8 Form Interface Requirements
+
+Forms shall provide sufficient information for users to understand required input.
+
+Relevant forms may include:
+
+- Registration
+- Login
+- Customer profile
+- Artisan profile
+- Product creation/editing
+- Checkout
+- Custom-order request
+- Quotation
+- Review
+- Category management
+
+Mandatory fields shall be distinguishable from optional fields where practical.
+
+Invalid submissions shall provide understandable validation feedback.
+
+---
+
+## 3.9 User Feedback Interface
+
+Important user actions shall provide visible success or failure feedback.
+
+Examples include:
+
+- Registration
+- Login
+- Product creation
+- Product update
+- Add to cart
+- Checkout
+- Order confirmation
+- Custom-request submission
+- Quotation submission
+- Quotation approval
+- Status change
+- Review submission
+- Administrative action
+
+The interface shall not indicate success when the authoritative backend operation has failed.
+
+---
+
+## 3.10 Error Interface
+
+User-facing errors shall be understandable without exposing sensitive implementation information.
+
+Examples of appropriate user-facing outcomes include:
+
+```text
+Invalid email or password.
+```
+
+```text
+You are not authorized to perform this action.
+```
+
+```text
+The requested record was not found.
+```
+
+```text
+The uploaded file is not supported.
+```
+
+User-facing interfaces shall not intentionally expose:
+
+- Application secrets
+- Database credentials
+- Internal stack traces
+- Private keys
+- Sensitive server configuration
+
+---
+
+## 3.11 Application / API Interface
+
+Craft BD is expected to use an application interface between the web client and authoritative backend logic.
+
+The current preferred architectural direction is:
+
+```text
+Web Client
+    ↓
+Application / REST-style API
+    ↓
+Business Logic
+    ↓
+Relational Database
+```
+
+The exact API framework and endpoint structure will be defined during API-design and architecture phases.
+
+---
+
+## 3.12 API Responsibility
+
+The authoritative application/API layer shall be responsible for enforcing relevant requirements such as:
+
+- Authentication
+- Authorization
+- Resource ownership
+- Business rules
+- Input validation
+- State-transition validation
+- Data-access boundaries
+
+Client-side validation may improve usability but shall not replace authoritative backend validation.
+
+---
+
+## 3.13 API Data Exchange
+
+The final API specification shall define:
+
+- Request structure
+- Response structure
+- Supported HTTP operations
+- Authentication mechanism
+- Validation errors
+- Authorization failures
+- Pagination where required
+- Search/filter parameters
+- File-upload behavior
+
+The current SRS does not prescribe a final serialization format or framework before architecture approval.
+
+---
+
+## 3.14 API Failure Handling
+
+The application interface shall distinguish appropriate classes of failure.
+
+Examples may include:
+
+- Invalid input
+- Authentication failure
+- Authorization failure
+- Resource not found
+- Business-rule violation
+- Server failure
+
+A failed protected operation shall not be represented as successful.
+
+---
+
+## 3.15 Database Interface
+
+Craft BD is expected to use a relational database for core persistent application data.
+
+Core data categories include:
+
+- Users
+- Artisan profiles
+- Products
+- Categories
+- Cart data
+- Orders
+- Order items
+- Custom requests
+- Quotations
+- Reviews
+- Notifications
+
+Conditional modules may add:
+
+- Verification records
+- Certificate records
+- Administrative audit records
+
+The final database technology and schema will be defined during database-design activities.
+
+---
+
+## 3.16 Database Integrity Boundary
+
+Application/database interaction shall preserve relevant integrity requirements.
+
+Examples include:
+
+```text
+Product → valid Artisan
+```
+
+```text
+Order → valid Customer
+```
+
+```text
+OrderItem → valid Order
+```
+
+```text
+Quotation → valid Custom Request
+```
+
+```text
+Review → valid Product
+```
+
+Invalid relationships shall be prevented or handled according to approved data and business rules.
+
+---
+
+## 3.17 File Storage Interface
+
+Craft BD requires persistent file/image storage where approved upload functionality is implemented.
+
+Potential stored files include:
+
+- Product images
+- Artisan profile images
+- Custom-order reference images
+
+The storage provider has not yet been selected.
+
+---
+
+## 3.18 File Storage Requirements
+
+The application-to-storage interface shall support:
+
+- Uploading approved files
+- Storing or receiving a safe file reference
+- Associating stored content with the correct application resource
+- Retrieving authorized content
+- Preventing unauthorized association or access
+
+The system shall not rely on untrusted client filenames as authoritative storage paths.
+
+---
+
+## 3.19 Public and Private File Access
+
+Different files may have different visibility.
+
+### Public or Potentially Public
+
+Examples:
+
+- Product images
+- Approved artisan profile images
+
+### Private / Restricted
+
+Examples:
+
+- Customer custom-order reference images
+
+Private files shall follow the authorization rules of the associated resource.
+
+A custom-order reference image shall not automatically become publicly accessible.
+
+---
+
+## 3.20 Communication Interface
+
+The deployed Craft BD system shall support normal web communication between browser clients and the application.
+
+Production deployment shall use HTTPS.
+
+The communication interface shall support the selected application/API protocol and approved file-upload mechanism.
+
+---
+
+## 3.21 HTTPS Requirement
+
+Normal production authentication and protected application communication shall occur over HTTPS.
+
+Plain HTTP shall not intentionally be used to transmit production authentication credentials.
+
+Related requirements include:
+
+- `SR-TRANSPORT-001`
+- `SR-TRANSPORT-002`
+
+---
+
+## 3.22 Notification Interface
+
+Craft BD may provide internal notification functionality.
+
+The initial MVP may implement:
+
+- In-app notifications
+- Dashboard alerts
+
+Optional future support may include:
+
+- Email notifications
+
+Real-time mobile push notifications and SMS are not required.
+
+---
+
+## 3.23 Email Interface
+
+Email integration is optional.
+
+If an email service is implemented, it may support selected events such as:
+
+- Account-related messages
+- Custom quotation availability
+- Important order updates
+
+The core business transaction shall not depend solely on successful email delivery.
+
+Example:
+
+```text
+Quotation Saved Successfully
+        ↓
+Email Delivery Fails
+        ↓
+Quotation Record Still Exists
+```
+
+The exact email provider remains undecided.
+
+Related requirement:
+
+`IR-EMAIL-001`
+
+---
+
+## 3.24 Payment Interface
+
+The academic MVP does not require a real payment-provider interface.
+
+The MVP may use:
+
+```text
+Simulated Payment
+```
+
+to demonstrate payment-related workflow states.
+
+Related requirement:
+
+`IR-PAY-001 — DEFERRED`
+
+If real payment is introduced later, a separate integration specification must define:
+
+- Provider
+- Authentication
+- Transaction creation
+- Callback/webhook handling
+- Success/failure states
+- Security
+- Error handling
+- Testing
+
+---
+
+## 3.25 Logistics Interface
+
+Direct courier/logistics API integration is not required for the MVP.
+
+Craft BD may record internal status such as:
+
+```text
+READY_TO_SHIP
+SHIPPED
+DELIVERED
+```
+
+without receiving live courier information.
+
+Related requirement:
+
+`IR-LOGISTICS-001 — DEFERRED`
+
+---
+
+## 3.26 External Certification Interface
+
+Craft BD does not currently depend on a government or independent external certification interface.
+
+Any Craft BD certificate functionality remains a platform-maintained record unless a legitimate external certification service is later integrated.
+
+Related requirement:
+
+`IR-CERT-001 — DEFERRED`
+
+---
+
+## 3.27 Verification Interface
+
+Where QR-linked verification is implemented, a user may access an approved verification URL using a valid verification identifier.
+
+High-level interaction:
+
+```text
+QR / Verification Link
+       ↓
+Craft BD Verification Endpoint
+       ↓
+Approved Public Product Record
+```
+
+Invalid verification identifiers shall not expose unrelated records.
+
+---
+
+## 3.28 Analytics Interface
+
+External analytics integration is not required for the MVP.
+
+If analytics is introduced later, it shall be reviewed for:
+
+- Privacy
+- Data minimization
+- Security
+- Scope
+- Academic value
+
+Related requirement:
+
+`IR-ANALYTICS-001 — DEFERRED`
+
+---
+
+## 3.29 Browser Interface Compatibility
+
+The final approved browser-support matrix will be established during test planning.
+
+The MVP is expected to support modern project-approved desktop and mobile browsers.
+
+Browser-specific implementation shall not intentionally remove access to core functionality without documented reason.
+
+---
+
+## 3.30 Interface Security Principle
+
+Every protected interface shall follow:
+
+```text
+Request
+   ↓
+Authentication
+   ↓
+Authorization
+   ↓
+Ownership
+   ↓
+Business Rule
+   ↓
+Validation
+   ↓
+Action
+```
+
+A user interface control such as a hidden button does not replace backend access control.
+
+---
+
+## 3.31 Interface Privacy Principle
+
+Interfaces shall expose only the information required for the authorized interaction.
+
+Example:
+
+A public artisan page may expose:
+
+- Public name
+- Biography
+- Expertise
+- Products
+
+but shall not expose:
+
+- Password data
+- Authentication secrets
+- Private account information
+
+Similarly, Customer A shall not receive Customer B's private order information through any user or API interface.
+
+---
+
+## 3.32 Interface Dependency Summary
+
+| Interface | MVP Status |
+|---|---|
+| Responsive Web UI | Required |
+| Application/API Interface | Required |
+| Relational Database Interface | Required |
+| File Storage Interface | Required where uploads exist |
+| HTTPS | Required |
+| In-App Notification | Should |
+| Email | Optional |
+| Real Payment Gateway | Deferred |
+| Courier API | Deferred |
+| External Certification | Deferred |
+| External Analytics | Deferred |
+
+---
+
+## 3.33 Interface Design Boundary
+
+This SRS defines required interface behavior and boundaries.
+
+It does not yet define:
+
+- Final page layout
+- Visual design system
+- Final API endpoint URLs
+- Final request schemas
+- Final database tables
+- Final storage provider
+- Final hosting provider
+- Final email provider
+
+These decisions belong to later design phases.
+
+---
+
+## Section Status
+
+**Section:** 3 — External Interface Requirements  
+**Status:** Draft v0.1 Complete  
+**Final UI Design:** Pending  
+**Final API Contract:** Pending  
+**Final Provider Selection:** Pending  
+**New Product Requirements Introduced:** None  
+**Next Section:** Functional Requirements
 
 # 4. Functional Requirements
 
