@@ -2065,73 +2065,703 @@ These decisions belong to later design phases.
 
 # 4. Functional Requirements
 
-This section will reference and organize the formal functional requirements established in Phase 04.
+## 4.1 Functional Requirement Convention
 
-Requirements will not be silently renumbered or rewritten without requirement-change review.
+Functional requirements in this SRS retain the identifiers established during Phase 04.
 
----
+Format:
 
-## 4.1 Authentication and Access
+`FR-MODULE-NNN`
 
-Requirements:
+Each requirement should be interpreted together with its related:
 
-`FR-AUTH-*`
+- Business Rules
+- Security Requirements
+- Privacy Requirements
+- Data Requirements
+- Acceptance Criteria
+- Priority
+- Validation Status
 
-[Detailed requirement references to be inserted]
-
----
-
-## 4.2 Customer Profile
-
-Requirements:
-
-`FR-USER-*`
-
-[To be completed]
+This SRS does not silently renumber or redefine existing requirements.
 
 ---
 
-## 4.3 Artisan Management
+# 4.2 Authentication and Access Requirements
 
-Requirements:
+## FR-AUTH-001 — Customer Registration
 
-`FR-ART-*`
+**Statement**
 
-[To be completed]
+The system shall allow a new user to register a customer account using the required account information.
 
----
+**Actor:** Visitor / Customer  
+**Priority:** Must  
+**Status:** DRAFT  
+**Evidence:** DERIVED / Standard Platform Requirement
 
-## 4.4 Product Management
+**Acceptance Criteria**
 
-Requirements:
+Given a visitor who does not already have an account, when valid registration information is submitted, then the system shall create a customer account.
 
-`FR-PROD-*`
-
-[To be completed]
-
----
-
-## 4.5 Product Discovery
-
-Requirements:
-
-`FR-DISC-*`
-
-[To be completed]
+Invalid mandatory information or account conflicts shall prevent successful registration.
 
 ---
 
-## 4.6 Craft Context
+## FR-AUTH-002 — Artisan Registration
 
-Requirements:
+**Statement**
 
-`FR-CRAFT-*`
+The system shall allow a new user to register an artisan/seller account using the required account information.
 
-[To be completed]
+**Actor:** Visitor / Artisan  
+**Priority:** Must  
+**Status:** DRAFT  
+**Evidence:** DERIVED
 
-Research-dependent requirements shall remain marked as provisional.
+**Acceptance Criteria**
+
+A valid artisan registration shall create an artisan account and associate it with the corresponding artisan-profile structure.
 
 ---
+
+## FR-AUTH-003 — User Login
+
+**Statement**
+
+The system shall allow a registered user to authenticate using valid credentials.
+
+**Actors:**
+
+- Customer
+- Artisan
+- Administrator
+
+**Priority:** Must  
+**Status:** DRAFT  
+**Evidence:** DERIVED
+
+**Acceptance Criteria**
+
+Valid credentials shall authenticate the user.
+
+Invalid credentials shall not create an authenticated session.
+
+After authentication, access shall remain subject to role and authorization rules.
+
+---
+
+## FR-AUTH-004 — User Logout
+
+**Statement**
+
+The system shall allow an authenticated user to terminate their current authenticated session.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+After successful logout, the terminated authentication context shall no longer authorize protected application actions.
+
+---
+
+## FR-AUTH-005 — Role Recognition
+
+**Statement**
+
+The system shall identify an authenticated user's assigned role and use the role when determining access to protected functionality.
+
+Supported MVP roles include:
+
+- CUSTOMER
+- ARTISAN
+- ADMIN
+
+**Priority:** Must  
+**Status:** DRAFT  
+**Related Security:** `SR-AUTHZ-*`
+
+---
+
+# 4.3 Customer Profile Requirements
+
+## FR-USER-001 — View Own Profile
+
+**Statement**
+
+The system shall allow an authenticated customer to view permitted information from their own customer profile.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+The customer shall be able to view their own profile without receiving another customer's private information.
+
+---
+
+## FR-USER-002 — Update Own Profile
+
+**Statement**
+
+The system shall allow an authenticated customer to modify supported fields of their own customer profile.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Valid updates shall be stored for the authenticated customer.
+
+A customer shall not be able to modify another customer's profile.
+
+---
+
+# 4.4 Artisan Requirements
+
+## FR-ART-001 — Create and Maintain Artisan Profile
+
+**Statement**
+
+The system shall allow an artisan account to maintain an artisan profile containing approved professional information.
+
+Possible profile information includes:
+
+- Name
+- Region/location
+- Expertise
+- Experience
+- Biography
+- Profile image
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT  
+**Evidence:** SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+Valid artisan profile information shall be associated with the authenticated artisan account.
+
+---
+
+## FR-ART-002 — View Artisan Profile
+
+**Statement**
+
+The system shall allow users to view approved public information associated with an artisan profile.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Must  
+**Status:** DRAFT  
+**Evidence:** SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+The public artisan profile shall expose only fields approved for public display.
+
+Private authentication/account information shall not be exposed.
+
+---
+
+## FR-ART-003 — Update Own Artisan Profile
+
+**Statement**
+
+The system shall allow an authenticated artisan to modify supported information in their own artisan profile.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-ART-001`
+- Ownership security requirements
+
+**Acceptance Criteria**
+
+The artisan may update permitted fields of their own profile.
+
+The artisan shall not be permitted to modify another artisan's profile through normal artisan functionality.
+
+---
+
+## FR-ART-004 — Display Artisan Products
+
+**Statement**
+
+The system shall allow users to view eligible products associated with an artisan from the artisan's public profile.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Products displayed for an artisan shall correspond to the correct artisan relationship and product-visibility rules.
+
+---
+
+# 4.5 Product Management Requirements
+
+## FR-PROD-001 — Create Product
+
+**Statement**
+
+The system shall allow an authenticated artisan to create a product associated with their own artisan account.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Data:** `DR-PROD-*`
+
+**Acceptance Criteria**
+
+A valid product submission shall create a product associated with the authenticated artisan.
+
+Missing or invalid mandatory information shall prevent successful creation.
+
+---
+
+## FR-PROD-002 — Edit Own Product
+
+**Statement**
+
+The system shall allow an authenticated artisan to modify permitted information for a product they own.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-PROD-001`
+- `SR-OWN-001`
+
+**Acceptance Criteria**
+
+The owning artisan may save valid changes.
+
+A non-owning artisan shall be denied.
+
+---
+
+## FR-PROD-003 — Deactivate Own Product
+
+**Statement**
+
+The system shall allow an authenticated artisan to deactivate an owned product so that the product is no longer available for normal customer ordering.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-PROD-006`
+
+**Acceptance Criteria**
+
+A deactivated product shall no longer be available for new normal orders while historical transaction records remain preserved where required.
+
+---
+
+## FR-PROD-004 — Maintain Product Price
+
+**Statement**
+
+The system shall allow an authorized artisan to define and update the current selling price of an owned product.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-PROD-003`
+
+**Acceptance Criteria**
+
+Invalid price values shall be rejected.
+
+Valid current price information shall be available to approved commerce functions.
+
+---
+
+## FR-PROD-005 — Maintain Product Stock
+
+**Statement**
+
+The system shall allow an authorized artisan to maintain the available stock quantity of an owned standard product where inventory tracking applies.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-PROD-004`
+
+**Acceptance Criteria**
+
+Negative or otherwise invalid stock values shall be rejected.
+
+---
+
+## FR-PROD-006 — Upload Product Images
+
+**Statement**
+
+The system shall allow an authenticated artisan to upload supported images for an owned product.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Security:**
+
+- `SR-FILE-001`
+- `SR-FILE-002`
+- `SR-FILE-003`
+- `SR-FILE-004`
+- `SR-FILE-005`
+
+**Acceptance Criteria**
+
+Valid supported files shall be associated with the correct product.
+
+Invalid or unauthorized uploads shall be rejected.
+
+---
+
+## FR-PROD-007 — Assign Product Category
+
+**Statement**
+
+The system shall require a product to reference an available valid product category according to the approved category model.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-PROD-002`
+
+---
+
+## FR-PROD-008 — Store Product Description
+
+**Statement**
+
+The system shall allow an artisan to provide and maintain a description for an owned product.
+
+**Actor:** Artisan  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Valid product-description information shall be stored and made available on the relevant public product-details interface.
+
+---
+
+## FR-PROD-009 — Store Product Material Information
+
+**Statement**
+
+The system shall allow supported material information to be associated with a product.
+
+**Actor:** Artisan  
+**Priority:** Should  
+**Status:** DRAFT  
+**Evidence:** SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+Where material information exists, permitted users shall be able to view the approved information.
+
+---
+
+## FR-PROD-010 — Store Craft Type / Region Information
+
+**Statement**
+
+The system shall allow supported craft-type and region information to be associated with a product where applicable.
+
+**Actor:** Artisan  
+**Priority:** Should  
+**Status:** DRAFT  
+**Evidence:** SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+Valid stored craft-type and region information shall be available for approved product display and supported discovery behavior.
+
+---
+
+# 4.6 Product Discovery Requirements
+
+## FR-DISC-001 — Browse Available Products
+
+**Statement**
+
+The system shall allow users to browse products that are currently eligible for public display.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-PROD-005`
+
+**Acceptance Criteria**
+
+Eligible products shall appear in the public catalog.
+
+Products that do not satisfy visibility rules shall not appear as normally available products.
+
+---
+
+## FR-DISC-002 — View Product Details
+
+**Statement**
+
+The system shall allow users to view approved public details of an available product.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Product details may include:
+
+- Product name
+- Images
+- Price
+- Description
+- Availability
+- Category
+- Material
+- Artisan
+- Supported craft information
+
+**Acceptance Criteria**
+
+A valid eligible product shall display its approved public information and relevant artisan association.
+
+---
+
+## FR-DISC-003 — Browse Products by Category
+
+**Statement**
+
+The system shall allow users to browse available products associated with a selected valid category.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Selecting an available category shall return eligible products associated with that category.
+
+---
+
+## FR-DISC-004 — Search Products
+
+**Statement**
+
+The system shall allow users to search available products using supported searchable information.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Security:** `SR-INPUT-005`
+
+**Acceptance Criteria**
+
+A supported matching search term shall return relevant eligible products.
+
+Products that are not permitted for public display shall not be exposed through search.
+
+---
+
+## FR-DISC-005 — Filter Products by Category
+
+**Statement**
+
+The system shall allow users to filter available products using category information.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Applying a valid category filter shall restrict results to eligible products belonging to the selected category.
+
+---
+
+## FR-DISC-006 — Filter Products by Price Range
+
+**Statement**
+
+The system shall allow users to filter available products using a supported price range.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Valid minimum and/or maximum price criteria shall exclude products outside the selected range.
+
+---
+
+## FR-DISC-007 — Filter Products by Material
+
+**Statement**
+
+The system shall allow users to filter available products using supported material information where such data is available.
+
+**Priority:** Should  
+**Status:** PROVISIONAL  
+**Evidence:** PROVISIONAL / SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+Selecting a supported material shall restrict results to eligible products associated with that material.
+
+---
+
+## FR-DISC-008 — Filter Products by Craft Type
+
+**Statement**
+
+The system shall allow users to filter available products using supported craft-type information where such data is available.
+
+**Priority:** Should  
+**Status:** PROVISIONAL  
+**Evidence:** PROVISIONAL
+
+**Acceptance Criteria**
+
+Selecting a supported craft type shall restrict results to eligible products associated with that craft type.
+
+---
+
+# 4.6.1 Craft Context Requirements
+
+## FR-CRAFT-001 — View Basic Craft Context
+
+**Statement**
+
+The system shall allow users to view approved contextual craft information associated with a relevant product or craft type where such information exists.
+
+Possible information may include:
+
+- Origin
+- Materials
+- Technique
+- Traditional use
+- Cultural context
+
+**Priority:** Should  
+**Status:** PROVISIONAL  
+**Evidence:** PROVISIONAL / SECONDARY_SUPPORTED
+
+**Acceptance Criteria**
+
+Where approved contextual information exists, it shall be accessible through the relevant product or craft interface.
+
+---
+
+## FR-CRAFT-002 — Maintain Craft Context
+
+**Statement**
+
+The system shall allow an authorized role to create or update supported craft-context information according to the approved content-ownership policy.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+**Acceptance Criteria**
+
+Only an authorized role shall be permitted to modify shared craft-context information.
+
+The final content-owning role shall be finalized before implementation.
+
+---
+
+# 4.6.2 Functional Dependency Summary
+
+The requirements in this part follow the dependency direction:
+
+```text
+Authentication
+      ↓
+Role / Ownership
+
+Artisan
+      ↓
+Product
+      ↓
+Discovery
+```
+
+Product-discovery functionality depends on valid product records.
+
+Product management depends on valid artisan ownership.
+
+Protected modification functions depend on authentication, authorization, and ownership enforcement.
+
+---
+
+# 4.6.3 Functional Requirement Status Summary
+
+| Module | IDs | MVP Status |
+|---|---|---|
+| Authentication | FR-AUTH-001–005 | Must |
+| Customer Profile | FR-USER-001–002 | Should |
+| Artisan | FR-ART-001–004 | Must |
+| Product | FR-PROD-001–010 | Must / Should |
+| Discovery | FR-DISC-001–008 | Must / Should / Provisional |
+| Craft Context | FR-CRAFT-001–002 | Provisional Should |
+
+---
+
+# 4.6.4 Research Boundary
+
+The following requirements remain especially dependent on later primary user evidence:
+
+- FR-DISC-007
+- FR-DISC-008
+- FR-CRAFT-001
+- FR-CRAFT-002
+
+Their inclusion in this SRS means that they are formally documented.
+
+It does not mean that their user value has already been validated.
+
+---
+
+## Part Status
+
+**SRS Section:** 4 — Functional Requirements  
+**Completed Modules:** AUTH, USER, ART, PROD, DISC, CRAFT  
+**Status:** Draft v0.1  
+**Requirement IDs Changed:** No  
+**New Requirements Introduced:** No  
+**Research Boundary:** Preserved
 
 ## 4.7 Shopping Cart
 
