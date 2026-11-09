@@ -217,7 +217,6 @@ Implementation should remain traceable to approved requirements.
 Testing activities will use this SRS to derive:
 
 - Functional tests
-- Integration tests
 - Negative tests
 - Security tests
 - Performance tests
@@ -548,6 +547,7 @@ The high-level system context is:
                │     Craft BD      │
                │   Web Platform    │
                └───────┬───────────┘
+- Integration tests
                        │
              ┌─────────┴──────────┐
              ▼                    ▼
@@ -3500,17 +3500,960 @@ REVIEW REJECTED
 **New Requirements Introduced:** None  
 **Next Module:** Structured Custom Order
 
-## 4.10 Structured Custom Order
+## 4.10 Structured Custom Order Requirements
 
-Requirements:
+### 4.10.1 Module Status
 
-`FR-CUSTOM-*`
+The structured custom-order module is currently classified as:
 
-[To be completed]
+**Provisional Must Have**
 
-This section shall remain explicitly marked as provisional until primary customer and artisan validation is completed.
+The workflow is technically defined, but its final product value remains dependent on primary Customer and Artisan research.
+
+Current workflow:
+
+```text
+Customer
+   ↓
+Custom Request
+   ↓
+Artisan Review
+   ↓
+Quotation
+   ↓
+Customer Decision
+   ↓
+Production
+   ↓
+Status Tracking
+   ↓
+Completion
+```
+
+A custom request shall not automatically become a production order.
 
 ---
+
+### FR-CUSTOM-001 — Start Custom Order Request
+
+**Statement**
+
+The system shall allow an authenticated customer to initiate a custom-order request for an eligible artisan or product context.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+**Acceptance Criteria**
+
+Only an authenticated customer shall be allowed to create a request through normal customer functionality.
+
+The created request shall belong to that customer.
+
+---
+
+### FR-CUSTOM-002 — Provide Product Type
+
+**Statement**
+
+The system shall allow the customer to specify the requested product type.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-003 — Provide Design Requirement
+
+**Statement**
+
+The system shall allow the customer to provide supported design information for the requested custom product.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-004 — Provide Color Requirement
+
+**Statement**
+
+The system shall allow the customer to provide color requirements where applicable.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-005 — Provide Size Requirement
+
+**Statement**
+
+The system shall allow the customer to provide supported size information where applicable.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-006 — Provide Material Requirement
+
+**Statement**
+
+The system shall allow the customer to provide preferred material information where applicable.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-007 — Provide Quantity
+
+**Statement**
+
+The system shall require a valid requested quantity for the custom order.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CUSTOM-006`
+
+**Acceptance Criteria**
+
+Valid positive quantities shall be accepted.
+
+Invalid quantities shall be rejected.
+
+---
+
+### FR-CUSTOM-008 — Upload Reference Image
+
+**Statement**
+
+The system shall allow the customer to upload a supported reference image with the custom-order request.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+**Related Security:**
+
+- `SR-FILE-*`
+- `PR-DATA-005`
+
+**Acceptance Criteria**
+
+Valid authorized images shall be associated with the correct custom request.
+
+Unsupported or unauthorized files shall be rejected.
+
+---
+
+### FR-CUSTOM-009 — Provide Additional Instructions
+
+**Statement**
+
+The system shall allow the customer to provide additional textual instructions.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-010 — Submit Custom Request
+
+**Statement**
+
+The system shall allow a customer to submit the custom-order request after required information passes validation.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+**Acceptance Criteria**
+
+A valid submission shall create a persistent custom-request record containing the approved required data.
+
+---
+
+### FR-CUSTOM-011 — Assign Initial Request Status
+
+**Statement**
+
+The system shall assign an approved initial state to a newly submitted custom request.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Current provisional initial state:
+
+```text
+REQUESTED
+```
+
+---
+
+### FR-CUSTOM-012 — View Own Custom Requests
+
+**Statement**
+
+The system shall allow an authenticated customer to view custom requests belonging to their own account.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Security:** `SR-OWN-003`
+
+---
+
+### FR-CUSTOM-013 — View Custom Request Details
+
+**Statement**
+
+The system shall allow the request owner to view the stored details and current status of their custom request.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 4.10.2 Artisan Review Requirements
+
+### FR-CUSTOM-014 — View Assigned Custom Requests
+
+**Statement**
+
+The system shall allow an authenticated artisan to view custom requests assigned to that artisan.
+
+**Actor:** Artisan  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+**Related Rules:**
+
+- `BR-CUSTOM-003`
+- `SR-OWN-004`
+
+**Acceptance Criteria**
+
+An artisan shall not receive normal workflow access to a request assigned to another artisan.
+
+---
+
+### FR-CUSTOM-015 — View Customer Requirements
+
+**Statement**
+
+The system shall allow the assigned artisan to view the customization information submitted with the request.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+Applicable information may include:
+
+- Product type
+- Design
+- Color
+- Size
+- Material
+- Quantity
+- Reference image
+- Instructions
+
+subject to privacy rules.
+
+---
+
+### FR-CUSTOM-016 — Mark Request Under Review
+
+**Statement**
+
+The system shall allow the assigned artisan to mark an eligible request as under review.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Current provisional state:
+
+```text
+UNDER_REVIEW
+```
+
+---
+
+### FR-CUSTOM-017 — Reject Custom Request
+
+**Statement**
+
+The system shall allow the assigned artisan to reject an eligible request when the artisan cannot or will not proceed.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CUSTOM-013`
+
+**Acceptance Criteria**
+
+A rejected request shall enter the approved rejected state and shall not proceed directly into production.
+
+---
+
+## 4.10.3 Quotation Requirements
+
+### FR-CUSTOM-018 — Create Quotation
+
+**Statement**
+
+The system shall allow the assigned artisan to create a quotation for an eligible custom request.
+
+**Actor:** Artisan  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-019 — Provide Quoted Price
+
+**Statement**
+
+The system shall require a valid quoted price for a quotation.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CUSTOM-005`
+
+**Acceptance Criteria**
+
+Invalid quotation prices shall be rejected.
+
+---
+
+### FR-CUSTOM-020 — Provide Estimated Completion
+
+**Statement**
+
+The system shall allow the artisan to provide an estimated completion date or another approved completion estimate.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-021 — Provide Quotation Notes
+
+**Statement**
+
+The system shall allow the artisan to provide additional notes with the quotation.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-022 — Submit Quotation
+
+**Statement**
+
+The system shall allow the assigned artisan to submit a valid quotation associated with the relevant custom request.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CUSTOM-004`
+
+**Acceptance Criteria**
+
+A valid submitted quotation shall remain associated with the correct custom request and become available to its owner.
+
+---
+
+### FR-CUSTOM-023 — Update Request to Quoted Status
+
+**Statement**
+
+The system shall update an eligible custom request to the approved quoted state after a valid quotation is submitted.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Current provisional state:
+
+```text
+QUOTED
+```
+
+---
+
+## 4.10.4 Customer Quotation Decision Requirements
+
+### FR-CUSTOM-024 — View Quotation
+
+**Statement**
+
+The system shall allow the request owner to view the valid quotation associated with their custom request.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+The quotation may display:
+
+- Quoted price
+- Estimated completion
+- Artisan notes
+- Relevant customer requirements
+
+---
+
+### FR-CUSTOM-025 — Approve Quotation
+
+**Statement**
+
+The system shall allow the request owner to approve an eligible quotation.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+**Related Rules:**
+
+- `BR-CUSTOM-001`
+- `BR-CUSTOM-002`
+- `SR-AUTHZ-007`
+
+**Acceptance Criteria**
+
+Only the request owner shall be able to approve the quotation through normal customer functionality.
+
+Successful approval shall be persisted.
+
+---
+
+### FR-CUSTOM-026 — Reject Quotation
+
+**Statement**
+
+The system shall allow the request owner to reject an eligible quotation.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CUSTOM-002`
+
+---
+
+### FR-CUSTOM-027 — Record Quotation Decision
+
+**Statement**
+
+The system shall persist the customer's quotation decision and the associated decision time.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Data:**
+
+- `DR-CUSTOM-010`
+- `DR-CUSTOM-011`
+
+---
+
+## 4.10.5 Production Activation
+
+### FR-CUSTOM-028 — Activate Approved Custom Order
+
+**Statement**
+
+The system shall allow a custom request to enter the production workflow only after a valid quotation has been approved by the request owner.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-CUSTOM-001`
+- `SR-AUTHZ-006`
+
+**Acceptance Criteria**
+
+A request without valid quotation approval shall not transition into production.
+
+---
+
+## 4.10.6 Production Status Requirements
+
+### FR-CUSTOM-029 — Mark In Production
+
+**Statement**
+
+The system shall allow the assigned artisan to update an eligible approved custom order to `IN_PRODUCTION`.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-030 — Mark Quality Check
+
+**Statement**
+
+The system shall allow the assigned artisan to record `QUALITY_CHECK` where that state is included in the approved workflow.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+The software records the state.
+
+It does not physically perform quality inspection.
+
+---
+
+### FR-CUSTOM-031 — Mark Ready to Ship
+
+**Statement**
+
+The system shall allow the assigned artisan to update an eligible custom order to `READY_TO_SHIP`.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### FR-CUSTOM-032 — Mark Shipped
+
+**Statement**
+
+The system shall allow an authorized actor to update an eligible custom order to `SHIPPED`.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+The MVP does not require courier API integration.
+
+---
+
+### FR-CUSTOM-033 — Mark Delivered
+
+**Statement**
+
+The system shall allow an eligible custom order to be recorded as `DELIVERED` according to approved completion rules.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+The final actor responsible for confirming delivery will be defined during workflow design.
+
+---
+
+## 4.10.7 Tracking Requirements
+
+### FR-CUSTOM-034 — View Custom Order Status
+
+**Statement**
+
+The system shall allow the request owner to view the current approved status of their custom order.
+
+**Actor:** Customer  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-035 — View Active Custom Orders
+
+**Statement**
+
+The system shall allow an artisan to view active custom orders requiring or undergoing artisan action.
+
+**Actor:** Artisan  
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### FR-CUSTOM-036 — View Completed Custom Orders
+
+**Statement**
+
+The system shall allow authorized Customers and Artisans to view completed custom orders relevant to them.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+## 4.10.8 Cancellation Requirements
+
+### FR-CUSTOM-037 — Request Cancellation
+
+**Statement**
+
+The system shall allow an authorized customer to request cancellation of an eligible custom order where approved cancellation rules permit.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+**Related Rule:** `BR-CUSTOM-014`
+
+---
+
+### FR-CUSTOM-038 — Record Cancelled State
+
+**Statement**
+
+The system shall record an approved custom-order cancellation using the appropriate terminal state.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+Current provisional state:
+
+```text
+CANCELLED
+```
+
+---
+
+## 4.10.9 Custom Order State Model
+
+The provisional workflow is:
+
+```text
+REQUESTED
+    ↓
+UNDER_REVIEW
+    ↓
+QUOTED
+    ↓
+CUSTOMER_APPROVED
+    ↓
+IN_PRODUCTION
+    ↓
+QUALITY_CHECK
+    ↓
+READY_TO_SHIP
+    ↓
+SHIPPED
+    ↓
+DELIVERED
+```
+
+Possible terminal alternatives:
+
+```text
+REJECTED
+CANCELLED
+```
+
+The formal state machine will be completed during UML/system-analysis work.
+
+---
+
+## 4.10.10 State Integrity Requirements
+
+The system shall reject invalid state transitions according to:
+
+`BR-CUSTOM-007`
+
+Examples of normally invalid transitions include:
+
+```text
+REQUESTED → SHIPPED
+```
+
+```text
+QUOTED → IN_PRODUCTION
+```
+
+without customer approval.
+
+```text
+REJECTED → IN_PRODUCTION
+```
+
+```text
+DELIVERED → IN_PRODUCTION
+```
+
+---
+
+## 4.10.11 Requirement Change After Approval
+
+A significant unresolved scenario is:
+
+> What happens if the customer requests a design change after approving the quotation?
+
+The current direction is that unrestricted editing shall not be allowed.
+
+A possible future controlled workflow is:
+
+```text
+Customer Change Request
+        ↓
+Artisan Impact Review
+        ↓
+Revised Quotation
+        ↓
+Customer Re-Approval
+```
+
+This behavior is not yet a committed MVP feature.
+
+If introduced, it shall follow requirement-change control.
+
+---
+
+## 4.10.12 Privacy Boundary
+
+Custom-order data may contain:
+
+- Customer instructions
+- Reference images
+- Size information
+- Design details
+- Delivery-related data
+
+Normal access should be restricted to:
+
+```text
+Request Owner
+      +
+Assigned Artisan
+      +
+Authorized Administrator where required
+```
+
+Related requirements include:
+
+- `PR-DATA-004`
+- `PR-DATA-005`
+- `BR-CUSTOM-011`
+
+---
+
+## 4.10.13 Security Boundary
+
+Protected custom-order actions require:
+
+```text
+Authentication
+      ↓
+Role Authorization
+      ↓
+Ownership / Assignment
+      ↓
+Valid Workflow State
+      ↓
+Business Rule Validation
+      ↓
+Action
+```
+
+Examples:
+
+### Wrong Customer
+
+Customer B attempts to approve Customer A's quotation.
+
+Expected:
+
+```text
+ACCESS DENIED
+```
+
+### Wrong Artisan
+
+Artisan B attempts to quote a request assigned to Artisan A.
+
+Expected:
+
+```text
+ACCESS DENIED
+```
+
+### Production Before Approval
+
+Artisan attempts production before valid customer approval.
+
+Expected:
+
+```text
+TRANSITION REJECTED
+```
+
+---
+
+## 4.10.14 Customer-Facing Status Simplification
+
+The backend may maintain detailed workflow states while the customer interface presents a simpler status model.
+
+Example:
+
+```text
+Request Sent
+→ Quote Ready
+→ Approved
+→ In Production
+→ Ready
+→ Shipped
+→ Delivered
+```
+
+Any simplified status shall remain consistent with the authoritative workflow state.
+
+Related rule:
+
+`BR-CUSTOM-012`
+
+---
+
+## 4.10.15 Notification Dependencies
+
+The custom workflow may generate meaningful notification events including:
+
+### Customer
+
+- Quotation available
+- Production started
+- Ready to ship
+- Shipped
+- Delivered
+
+### Artisan
+
+- New custom request
+- Quotation approved
+- Quotation rejected
+- Cancellation request
+
+Notification delivery shall not become the authoritative source of workflow state.
+
+---
+
+## 4.10.16 Custom Order Requirement Traceability
+
+| Need / Pain Point | Requirement Area |
+|---|---|
+| PP-01 Requirement ambiguity | FR-CUSTOM-002–010 |
+| PP-02 Quotation ambiguity | FR-CUSTOM-018–028 |
+| PP-03 Repeated progress questions | FR-CUSTOM-029–036 |
+| Clear customer agreement | FR-CUSTOM-024–028 |
+| Complete artisan specification | FR-CUSTOM-015 |
+| Organized artisan work | FR-CUSTOM-014, FR-CUSTOM-035 |
+
+---
+
+## 4.10.17 Future Use Cases
+
+The current requirements are expected to support use cases such as:
+
+```text
+UC-CUSTOM-001 — Submit Custom Request
+UC-CUSTOM-002 — Review Custom Request
+UC-CUSTOM-003 — Create Quotation
+UC-CUSTOM-004 — Approve Quotation
+UC-CUSTOM-005 — Reject Quotation
+UC-CUSTOM-006 — Update Custom Order Status
+UC-CUSTOM-007 — Track Custom Order
+```
+
+Formal use-case specifications will be created in the later Use Case phase.
+
+---
+
+## 4.10.18 Future Test Direction
+
+Important test scenarios shall include:
+
+```text
+TC-CUSTOM-001 — Request Submission
+TC-CUSTOM-002 — Customer Ownership
+TC-CUSTOM-003 — Artisan Assignment
+TC-CUSTOM-004 — Quotation Creation
+TC-CUSTOM-005 — Quotation Approval
+TC-CUSTOM-006 — Production Guard
+TC-CUSTOM-007 — State Transition
+TC-CUSTOM-008 — Customer Tracking
+TC-CUSTOM-009 — Reference Image Security
+TC-CUSTOM-010 — Cancellation
+```
+
+---
+
+## 4.10.19 Validation Boundary
+
+A substantial portion of the module remains:
+
+```text
+PROVISIONAL
+```
+
+because:
+
+```text
+Technically Complete Workflow
+        ≠
+Validated User Need
+```
+
+Primary Customer and Artisan research must determine whether the structured workflow provides sufficient value compared with existing informal processes.
+
+---
+
+## 4.10.20 MVP Decision Rule
+
+If primary research supports the workflow:
+
+```text
+Provisional Must
+→ Must
+```
+
+If evidence indicates the workflow is too complex or does not solve a meaningful problem:
+
+```text
+Review
+→ Simplify
+or
+Rewrite
+or
+Defer
+```
+
+The project shall not preserve the workflow solely because substantial documentation has already been produced.
+
+---
+
+## 4.10.21 Engineering Significance
+
+If validated, the custom-order module represents a strong Software Engineering component because it contains:
+
+- Multiple actors
+- Structured requirements
+- Ownership
+- Authorization
+- Quotation
+- Explicit approval
+- State transitions
+- File handling
+- Privacy
+- Business rules
+- Negative scenarios
+- Traceability
+- Testable workflow integrity
+
+---
+
+## Part Status
+
+**SRS Section:** 4.10 — Structured Custom Order  
+**Requirements:** FR-CUSTOM-001–038  
+**Status:** Provisional Draft v0.1  
+**Requirement IDs Changed:** No  
+**New Requirements Introduced:** No  
+**Primary Research Dependency:** Critical  
+**Next Module:** Notifications, Verification, Certificate & Administration
 
 ## 4.11 Notifications
 
