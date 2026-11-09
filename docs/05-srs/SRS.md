@@ -5264,64 +5264,931 @@ Business rules defined during Phase 04 will be referenced using:
 
 ---
 
-## 5.1 Product Rules
+# 5. Business Rules
 
-`BR-PROD-*`
+## 5.1 Purpose
 
-[To be completed]
+Business rules define conditions, restrictions, eligibility rules, ownership rules, state-transition rules, and governance policies that control Craft BD behavior.
 
----
+Business rules use the format:
 
-## 5.2 Cart Rules
+`BR-MODULE-NNN`
 
-`BR-CART-*`
+A business rule is different from a functional requirement.
 
-[To be completed]
+Example:
 
----
+```text
+FR-CUSTOM-025
+Customer may approve a quotation.
+```
 
-## 5.3 Standard Order Rules
+while:
 
-`BR-ORDER-*`
+```text
+BR-CUSTOM-001
+Production shall not begin before quotation approval.
+```
 
-[To be completed]
+The functional requirement describes an available system behavior.
 
----
-
-## 5.4 Custom Order Rules
-
-`BR-CUSTOM-*`
-
-[To be completed]
-
----
-
-## 5.5 Review Rules
-
-`BR-REV-*`
-
-[To be completed]
+The business rule defines the condition under which the workflow is valid.
 
 ---
 
-## 5.6 Verification and Certificate Rules
+## 5.2 Product Business Rules
 
-`BR-VERIFY-*`  
-`BR-CERT-*`
+### BR-PROD-001 — Product Ownership
 
-[To be completed]
+An artisan may modify or deactivate only products associated with their own artisan account through normal artisan functionality.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+- `FR-PROD-002`
+- `FR-PROD-003`
+- `SR-OWN-001`
 
 ---
 
-## 5.7 Administration and Privacy Rules
+### BR-PROD-002 — Valid Product Category
 
-`BR-ADMIN-*`  
-`BR-PRIV-*`
+A product requiring categorization shall reference a valid available category.
 
-[To be completed]
+**Priority:** Must  
+**Status:** DRAFT
 
 ---
 
+### BR-PROD-003 — Valid Product Price
+
+A product price shall satisfy the approved numeric and business validation rules.
+
+Negative prices shall not be permitted.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-PROD-004 — Valid Product Stock
+
+Where inventory tracking applies, product stock shall not be negative.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-PROD-005 — Product Visibility
+
+Only products satisfying approved visibility rules may appear in normal public discovery.
+
+Visibility rules may consider:
+
+- Product active status
+- Valid artisan relationship
+- Valid category
+- Approved platform visibility state
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-PROD-006 — Historical Product Preservation
+
+Deactivating a product shall not automatically destroy historical order information that references that product.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.3 Artisan Business Rules
+
+### BR-ART-001 — Artisan Profile Ownership
+
+An artisan may modify only their own artisan profile through normal artisan functionality.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ART-002 — Public Artisan Information
+
+Only artisan-profile fields approved for public display may be exposed through public interfaces.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.4 Cart Business Rules
+
+### BR-CART-001 — Cart Ownership
+
+A customer's active cart shall belong only to that customer account.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CART-002 — Valid Cart Quantity
+
+Cart quantities shall be positive and shall satisfy approved product-availability rules.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CART-003 — Product Ordering Eligibility
+
+A product may be added to an active cart only when it is eligible for normal ordering.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CART-004 — Authoritative Cart Total
+
+Cart totals shall be calculated using authoritative product price and approved quantity information.
+
+A total supplied by the client shall not be treated as authoritative merely because it was submitted by the browser.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.5 Standard Order Business Rules
+
+### BR-ORDER-001 — Order Ownership
+
+Each standard order shall belong to exactly one customer account.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-002 — Order Item Persistence
+
+A confirmed order shall preserve the transaction information required for historical consistency.
+
+This includes the applicable transaction-time item price.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-003 — Valid Checkout
+
+An order may be confirmed only when all mandatory checkout information satisfies approved validation rules.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-004 — Empty Cart Restriction
+
+A standard order shall not be confirmed when no eligible order items exist.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-005 — Standard Order State Integrity
+
+A standard order may transition only through approved workflow-state transitions.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-006 — Authorized Status Update
+
+Only an authorized actor may change a standard order's workflow status.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-007 — Historical Price Integrity
+
+A later change to a product's current price shall not alter the stored transaction-time price of a previously confirmed order.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-008 — Private Order Access
+
+A customer may access private order information only for orders owned by that customer unless an approved administrative rule applies.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-009 — Academic Payment Boundary
+
+The academic MVP may represent payment through simulated payment states without processing real financial transactions.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### BR-ORDER-010 — Financial Credential Restriction
+
+Craft BD shall not require or store:
+
+- Card PINs
+- Mobile financial service PINs
+- Bank passwords
+- Payment-provider passwords
+
+for the simulated academic payment workflow.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.6 Custom Order Business Rules
+
+The following rules remain particularly important because the custom-order workflow includes multiple actors and controlled state transitions.
+
+Several rules remain provisional until primary user research is completed.
+
+---
+
+### BR-CUSTOM-001 — Approval Before Production
+
+A custom order shall not enter the production workflow until the request owner has approved a valid artisan quotation.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+Related:
+
+- `FR-CUSTOM-025`
+- `FR-CUSTOM-028`
+- `SR-AUTHZ-006`
+
+---
+
+### BR-CUSTOM-002 — Quotation Decision Ownership
+
+Only the customer who owns the custom request may approve or reject its quotation through normal customer functionality.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-003 — Artisan Assignment
+
+Only the assigned artisan or an explicitly authorized administrative role may perform protected artisan-side actions on a custom request.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-004 — Valid Quotation Relationship
+
+A quotation shall belong to a valid existing custom-order request.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CUSTOM-005 — Valid Quotation Price
+
+A submitted quotation shall contain a price satisfying approved validation rules.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CUSTOM-006 — Valid Custom Quantity
+
+A custom-order request shall contain a valid positive requested quantity.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CUSTOM-007 — Custom Workflow State Integrity
+
+A custom-order request or custom order may transition only through an approved state transition.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-008 — Rejected Request Restriction
+
+A rejected request shall not proceed directly to quotation or production unless an approved reopening process exists.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-009 — Customer Requirement Integrity
+
+An artisan shall not silently alter customer-submitted customization requirements.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-010 — Post-Approval Change Control
+
+Material changes to agreed customization requirements after quotation approval shall follow an approved change process.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-011 — Private Custom-Order Access
+
+Private custom-order information shall normally be accessible only to:
+
+- Request owner
+- Assigned artisan
+- Authorized administrator where required
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CUSTOM-012 — Customer-Facing Status Accuracy
+
+A simplified customer-facing status may combine internal workflow states, but it shall not misrepresent the authoritative state.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-CUSTOM-013 — Artisan Request Rejection
+
+An artisan may reject an eligible custom request before production when the artisan cannot or chooses not to proceed according to approved platform rules.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CUSTOM-014 — Cancellation Eligibility
+
+A customer may request cancellation only when the current workflow state and approved cancellation policy permit it.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+## 5.7 Custom Order State Rules
+
+The current provisional state sequence is:
+
+```text
+REQUESTED
+    ↓
+UNDER_REVIEW
+    ↓
+QUOTED
+    ↓
+CUSTOMER_APPROVED
+    ↓
+IN_PRODUCTION
+    ↓
+QUALITY_CHECK
+    ↓
+READY_TO_SHIP
+    ↓
+SHIPPED
+    ↓
+DELIVERED
+```
+
+Alternative terminal states may include:
+
+```text
+REJECTED
+CANCELLED
+```
+
+Examples of normally invalid transitions include:
+
+```text
+REQUESTED → SHIPPED
+```
+
+```text
+QUOTED → IN_PRODUCTION
+```
+
+without customer approval.
+
+```text
+REJECTED → IN_PRODUCTION
+```
+
+```text
+DELIVERED → IN_PRODUCTION
+```
+
+The formal state machine will be defined during UML/system-analysis work.
+
+---
+
+## 5.8 Review Business Rules
+
+### BR-REV-001 — Review Eligibility
+
+A customer may submit a product rating or review only when the customer satisfies the approved purchase-eligibility condition for that product.
+
+**Priority:** Must if reviews are implemented  
+**Status:** DRAFT
+
+---
+
+### BR-REV-002 — Review Ownership
+
+A submitted review shall remain associated with the customer who created it.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-REV-003 — Artisan Review Restriction
+
+An artisan shall not edit or delete a legitimate customer review through normal artisan functionality.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-REV-004 — Review Moderation
+
+An administrator may moderate reviews only according to approved platform moderation rules.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### BR-REV-005 — Review Privacy
+
+Published reviews shall not expose private customer information beyond approved public reviewer information.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.9 Verification Business Rules
+
+### BR-VERIFY-001 — Platform Record Boundary
+
+A QR-linked verification record represents information maintained by Craft BD.
+
+It shall not automatically be treated as independent proof of physical-product authenticity.
+
+**Priority:** Must if verification is implemented  
+**Status:** PROVISIONAL
+
+---
+
+### BR-VERIFY-002 — Authorized Verification Management
+
+Only an authorized role may create, activate, deactivate, or modify protected verification records.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-VERIFY-003 — Unique Verification Record
+
+Each active verification record shall contain an identifier that uniquely resolves to its intended Craft BD record.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-VERIFY-004 — Invalid Verification Lookup
+
+An invalid verification identifier shall not return unrelated product, certificate, or private information.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+## 5.10 Certificate Business Rules
+
+### BR-CERT-001 — Authorized Certificate Creation
+
+Only an authorized administrator may create a Craft BD platform certificate record.
+
+**Priority:** Must if certificate functionality is implemented  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CERT-002 — Certificate Claim Boundary
+
+A Craft BD platform certificate shall not be represented as:
+
+- Government certification
+- Legally recognized authenticity certification
+- Independent external certification
+
+unless an authorized external process actually exists.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CERT-003 — Unique Certificate Identifier
+
+Each valid Craft BD certificate record shall contain a unique certificate identifier.
+
+**Priority:** Must if implemented  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CERT-004 — Certificate Product Relationship
+
+Each certificate record shall reference an eligible Craft BD product record.
+
+**Priority:** Must if implemented  
+**Status:** PROVISIONAL
+
+---
+
+### BR-CERT-005 — Certificate Historical Integrity
+
+Deactivation or revocation of a certificate record shall not silently destroy historical information required for traceability or audit purposes.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+## 5.11 Notification Business Rules
+
+### BR-NOTIF-001 — Notification Ownership
+
+A normal user may access only notifications associated with their own account.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-NOTIF-002 — Meaningful Notification Events
+
+Notifications should be generated for meaningful user actions or workflow changes rather than insignificant internal events.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### BR-NOTIF-003 — Notification Privacy
+
+A notification shall not expose private order or custom-order information to an unauthorized user.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.12 Administration Business Rules
+
+### BR-ADMIN-001 — Administrator Authorization
+
+Administrative functionality shall require authenticated and authorized administrator access.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ADMIN-002 — Admin by Exception
+
+Administrator intervention shall not be required for normal Customer–Artisan workflow unless a specific approved rule requires administrative action.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ADMIN-003 — Administrative Least Privilege
+
+Administrator permissions should be limited to functionality required by the approved governance model.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-ADMIN-004 — Sensitive Administrative Action Traceability
+
+High-impact administrative actions should be traceable where practical.
+
+Candidate actions include:
+
+- User deactivation
+- Content moderation
+- Verification deactivation
+- Certificate revocation
+- Exceptional order action
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### BR-ADMIN-005 — Category Historical Integrity
+
+Deactivating a category shall not silently destroy historical product or order information associated with that category.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.13 Privacy Business Rules
+
+### BR-PRIV-001 — Minimum Necessary Access
+
+Users shall receive access only to personal or transaction information necessary for their authorized role and workflow.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-PRIV-002 — Public / Private Separation
+
+Craft BD shall distinguish information intended for public display from private operational or personal information.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### BR-PRIV-003 — Academic Demo Data
+
+Public academic demonstrations should use synthetic or appropriately authorized data rather than expose unnecessary real-user personal records.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+## 5.14 Business Rule Enforcement Principle
+
+Business rules shall be enforced by the authoritative application layer and supporting persistence rules where appropriate.
+
+This is insufficient:
+
+```text
+Hide invalid action in UI
+```
+
+Required direction:
+
+```text
+UI may hide action
+        +
+Backend validates rule
+        +
+Database/data integrity supports rule
+```
+
+Example:
+
+```text
+"Start Production" button hidden
+```
+
+does not replace:
+
+```text
+Backend checks valid quotation approval.
+```
+
+---
+
+## 5.15 Business Rule Conflict Priority
+
+Where rules or features conflict, the project shall prioritize:
+
+```text
+Security / Privacy / Legal Constraint
+            ↓
+Data Integrity
+            ↓
+Core Workflow Correctness
+            ↓
+Validated User Value
+            ↓
+Operational Simplicity
+            ↓
+Optional Convenience
+```
+
+An optional convenience feature shall not override a critical security or integrity rule.
+
+---
+
+## 5.16 Business Rule Traceability
+
+Examples:
+
+| Business Rule | Related Requirement |
+|---|---|
+| BR-PROD-001 | FR-PROD-002, FR-PROD-003 |
+| BR-CART-002 | FR-CART-003 |
+| BR-ORDER-007 | FR-ORDER-007 |
+| BR-CUSTOM-001 | FR-CUSTOM-025, FR-CUSTOM-028 |
+| BR-CUSTOM-002 | FR-CUSTOM-025, FR-CUSTOM-026 |
+| BR-CUSTOM-003 | FR-CUSTOM-014, FR-CUSTOM-035 |
+| BR-REV-001 | FR-REV-002, FR-REV-003 |
+| BR-VERIFY-001 | FR-VERIFY-003 |
+| BR-CERT-002 | FR-CERT-003 |
+| BR-NOTIF-001 | FR-NOTIF-006 |
+| BR-ADMIN-001 | FR-ADMIN-* |
+
+---
+
+## 5.17 Business Rule Test Direction
+
+Business rules shall later map to explicit tests.
+
+### Product Ownership
+
+Given Artisan A does not own Product B.
+
+When Artisan A attempts to edit Product B.
+
+Then:
+
+```text
+ACCESS DENIED
+```
+
+---
+
+### Production Guard
+
+Given a quotation has not been approved.
+
+When the artisan attempts to move the custom order into production.
+
+Then:
+
+```text
+TRANSITION REJECTED
+```
+
+---
+
+### Review Eligibility
+
+Given a customer does not satisfy the approved purchase condition.
+
+When the customer submits a review.
+
+Then:
+
+```text
+REVIEW REJECTED
+```
+
+---
+
+### Invalid Verification Record
+
+Given an unknown verification identifier.
+
+When the identifier is requested.
+
+Then:
+
+```text
+INVALID / NOT FOUND
+```
+
+and unrelated information shall remain protected.
+
+---
+
+## 5.18 Rule Change Control
+
+After requirement baseline approval, material business-rule changes shall follow the requirement-change process.
+
+A business-rule change may affect:
+
+```text
+Requirement
+   ↓
+Workflow
+   ↓
+Database
+   ↓
+API
+   ↓
+UI
+   ↓
+Security
+   ↓
+Test Cases
+```
+
+Therefore business rules shall not be silently modified during implementation.
+
+---
+
+## 5.19 Provisional Business Rule Boundary
+
+The following rule groups remain particularly dependent on validation or optional scope:
+
+- Custom-order rules
+- Verification rules
+- Certificate rules
+
+Their presence in the SRS defines the current intended behavior.
+
+It does not imply that their underlying product value has already been fully validated.
+
+---
+
+## 5.20 Section Summary
+
+The Business Rule section establishes rules for:
+
+```text
+Product
+Cart
+Standard Order
+Custom Order
+Review
+Artisan
+Verification
+Certificate
+Notification
+Administration
+Privacy
+```
+
+These rules shall be considered alongside the functional requirements rather than treated as optional explanatory notes.
+
+---
+
+## Section Status
+
+**Section:** 5 — Business Rules  
+**Status:** Draft v0.1 Complete  
+**Source:** Phase 04 Business Rule Register  
+**Rule IDs Changed:** No  
+**New Business Rules Introduced:** No  
+**Primary Research Dependency:** Preserved  
+**Next Section:** Data Requirements
 # 6. Data Requirements
 
 Data requirements use:
