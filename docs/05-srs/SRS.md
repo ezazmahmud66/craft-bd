@@ -504,115 +504,832 @@ Later artifacts must remain traceable to this SRS and the underlying Requirement
 
 # 2. Overall Description
 
+# 2. Overall Description
+
 ## 2.1 Product Perspective
 
-[To be completed]
+Craft BD is planned as a standalone responsive web-based software system for supporting Bangladeshi handicraft discovery, artisan representation, standard product purchasing, and structured customer-artisan workflows.
 
-This section will explain Craft BD's position as a standalone responsive web application and its relationship with customers, artisans, administrators, and optional external services.
+The system will provide a shared platform through which:
 
----
+```text
+Customer
+   ↕
+Craft BD
+   ↕
+Artisan / Seller
+```
 
-## 2.2 Product Functions
+while an authorized administrator provides platform governance and exceptional support.
 
-[To be completed]
+Craft BD is not intended to replace:
 
-High-level functional areas will include:
+- Physical craft production
+- Courier operations
+- Banking or financial systems
+- Government certification systems
+- Independent physical-product authentication
 
-- Authentication
-- Customer profile
-- Artisan profile
-- Product management
-- Product discovery
-- Cart and checkout
-- Standard orders
-- Structured custom orders
-- Reviews
-- Notifications
-- Administration
-- Optional verification / certificate functionality
-
----
-
-## 2.3 User Classes and Characteristics
-
-[To be completed]
-
-Primary system actors:
-
-### Customer
-
-[To be completed]
-
-### Artisan / Seller
-
-[To be completed]
-
-### Administrator
-
-[To be completed]
+Instead, Craft BD manages digital records, information, communication structures, workflow states, and platform-controlled transactions.
 
 ---
 
-## 2.4 Operating Environment
+## 2.2 High-Level System Context
 
-[To be completed]
+The high-level system context is:
 
-Expected environment may include:
+```text
+                ┌─────────────────┐
+                │    Customer     │
+                └────────┬────────┘
+                         │
+                         ▼
+               ┌───────────────────┐
+               │     Craft BD      │
+               │   Web Platform    │
+               └───────┬───────────┘
+                       │
+             ┌─────────┴──────────┐
+             ▼                    ▼
+      ┌─────────────┐      ┌──────────────┐
+      │   Artisan   │      │ Administrator│
+      │  / Seller   │      │              │
+      └─────────────┘      └──────────────┘
+```
 
-- Modern web browser
-- Desktop and mobile browser layouts
-- Web application server
-- Relational database
+Optional future external services may include:
+
+- Email provider
+- Payment gateway
+- Courier/logistics provider
+- External certification authority
+- Analytics service
+
+These external services are not all mandatory dependencies of the current MVP.
+
+---
+
+## 2.3 Product Functions
+
+Craft BD is divided into several functional areas.
+
+### 2.3.1 Authentication and Access
+
+The system provides:
+
+- Customer registration
+- Artisan registration
+- Login
+- Logout
+- Role recognition
+- Protected access based on role and authorization
+
+---
+
+### 2.3.2 Customer Profile
+
+Customers may maintain supported account/profile information required for their platform interactions.
+
+Customer profile functionality remains secondary to the core ordering workflows.
+
+---
+
+### 2.3.3 Artisan Profile
+
+The system provides public artisan profiles containing approved information such as:
+
+- Artisan name
+- Region/location
+- Expertise
+- Experience
+- Biography
+- Associated products
+
+Artisans may manage their own permitted profile information.
+
+---
+
+### 2.3.4 Product Management
+
+Authorized artisans may manage their own products.
+
+Major product functions include:
+
+- Create product
+- Edit owned product
+- Deactivate owned product
+- Maintain price
+- Maintain stock
+- Upload product images
+- Assign category
+- Maintain product description
+- Provide selected product-context information
+
+---
+
+### 2.3.5 Product Discovery
+
+Users may discover products through:
+
+- Product catalog
+- Product-detail pages
+- Category browsing
+- Search
+- Selected filtering
+
+Possible supporting information may include:
+
+- Material
+- Craft type
+- Region
+- Artisan information
+- Craft context
+
+Some discovery enhancements remain provisional or lower priority.
+
+---
+
+### 2.3.6 Standard Commerce
+
+The standard commerce workflow supports purchasing an existing listed product.
+
+```text
+Product
+   ↓
+Cart
+   ↓
+Checkout
+   ↓
+Order Confirmation
+   ↓
+Order Record
+   ↓
+Status Tracking
+```
+
+The academic MVP may demonstrate payment behavior using simulated payment states.
+
+---
+
+### 2.3.7 Structured Custom Orders
+
+Craft BD currently includes a structured custom-order workflow as a provisional core capability.
+
+```text
+Customer
+   ↓
+Custom Request
+   ↓
+Artisan Review
+   ↓
+Quotation
+   ↓
+Customer Decision
+   ↓
+Production Workflow
+   ↓
+Status Tracking
+```
+
+Potential custom requirements include:
+
+- Product type
+- Design
+- Color
+- Size
+- Material
+- Quantity
+- Reference image
+- Additional instructions
+
+The exact value and final scope of this workflow remain dependent on primary customer and artisan validation.
+
+---
+
+### 2.3.8 Reviews
+
+Where review functionality is implemented, eligible customers may:
+
+- View product reviews
+- Submit ratings
+- Submit review text
+
+Review eligibility is controlled through approved business rules.
+
+An artisan shall not be able to remove a legitimate negative review merely because it is unfavorable.
+
+---
+
+### 2.3.9 Notifications
+
+The system may provide basic notifications for important events such as:
+
+- New custom request
+- Quotation available
+- Quotation approval
+- Quotation rejection
+- Important order-status changes
+
+The MVP does not require real-time push-notification infrastructure.
+
+---
+
+### 2.3.10 QR-Linked Product Records
+
+Where implemented, Craft BD may provide a QR-linked platform record containing approved product information.
+
+The intended relationship is:
+
+```text
+QR Code
+   ↓
+Craft BD URL
+   ↓
+Platform Product / Verification Record
+```
+
+This functionality shall not be represented as guaranteed independent proof of physical-product authenticity.
+
+---
+
+### 2.3.11 Platform Certificate Records
+
+Craft BD may optionally maintain platform-level certificate records for selected products.
+
+Such records remain optional and shall not be represented as government or independent external certification unless a legitimate external authority is integrated.
+
+---
+
+### 2.3.12 Administration
+
+Authorized administrators may perform selected governance activities such as:
+
+- Manage user status
+- Manage categories
+- Moderate platform content
+- Moderate reviews
+- Support exceptional platform cases
+- Manage optional verification records
+- Manage optional certificate records
+
+The system follows the principle:
+
+**Admin by Exception**
+
+Routine valid Customer–Artisan workflows should not require unnecessary administrator approval.
+
+---
+
+## 2.4 User Classes and Characteristics
+
+### 2.4.1 Customer
+
+The Customer is a primary system user.
+
+Typical customer goals include:
+
+- Discover handicraft products
+- Understand product information
+- Learn about artisans
+- Purchase existing products
+- Request customized products
+- Review artisan quotations
+- Track order progress
+- Review eligible purchases
+
+Customers may access Craft BD through desktop or mobile browsers.
+
+The interface should not assume advanced technical knowledge.
+
+---
+
+### 2.4.2 Artisan / Seller
+
+The Artisan is a primary system user responsible for presenting and managing craft products.
+
+Typical artisan goals include:
+
+- Maintain a professional artisan profile
+- Add and manage products
+- Receive structured custom requests
+- Review customer requirements
+- Create quotations
+- Manage approved custom-order progress
+
+Artisan usability is particularly important because some target users may rely primarily on mobile devices and may already use simpler social-media-based selling workflows.
+
+Therefore, unnecessary administrative complexity should be avoided.
+
+The exact usability needs remain subject to primary artisan research.
+
+---
+
+### 2.4.3 Administrator
+
+The Administrator is an authorized operational user responsible for platform governance.
+
+Typical administrator responsibilities include:
+
+- User-status management
+- Category management
+- Content moderation
+- Review moderation
+- Exceptional support actions
+- Optional verification/certificate management
+
+Administrators are not expected to participate in every normal customer-artisan transaction.
+
+---
+
+## 2.5 Stakeholders That Are Not Direct System Actors
+
+Not every project stakeholder is a software actor.
+
+Relevant non-actor stakeholders include:
+
+### Project Development Team
+
+Responsible for analysis, design, development, testing, deployment, and documentation.
+
+### Academic Supervisor / Faculty
+
+Provides academic guidance and evaluates the Software Engineering process and project outcome.
+
+### Regulatory and Consumer-Protection Stakeholders
+
+Influence privacy, digital-commerce, security, and user-protection constraints but do not necessarily interact directly with the Craft BD software.
+
+### Future External Providers
+
+Examples may include:
+
+- Payment provider
+- Courier provider
+- Email provider
+- External certification organization
+
+These become software actors or external systems only if approved integrations are implemented.
+
+---
+
+## 2.6 Operating Environment
+
+Craft BD is intended to operate as a responsive web application.
+
+### Client Environment
+
+Users are expected to access Craft BD using:
+
+- Desktop web browsers
+- Laptop web browsers
+- Mobile web browsers
+
+A native mobile application is not required for the initial MVP.
+
+---
+
+### Server Environment
+
+The deployed system is expected to include:
+
+```text
+Web Client
+    ↓
+Application / API Layer
+    ↓
+Relational Database
+```
+
+Persistent file/image storage may also be required.
+
+The exact hosting provider, programming framework, database technology, and storage provider will be selected during architecture and implementation planning.
+
+---
+
+### Network Environment
+
+The deployed application requires internet connectivity for normal remote access.
+
+Communication with the production deployment shall use HTTPS.
+
+---
+
+## 2.7 Design and Implementation Constraints
+
+### 2.7.1 Responsive Web Constraint
+
+The initial Craft BD release shall be implemented as a responsive web application.
+
+A separate native Android or iOS application is not required.
+
+---
+
+### 2.7.2 Small-Team Constraint
+
+The architecture and implementation shall remain manageable for a small academic project team.
+
+Unnecessary architectural complexity should be avoided.
+
+---
+
+### 2.7.3 Architecture Constraint
+
+The current preferred architectural direction is:
+
+```text
+Responsive Frontend
+        ↓
+REST-style API
+        ↓
+Modular Monolithic Backend
+        ↓
+Relational Database
+```
+
+This remains an architecture direction rather than a finalized technology-stack decision.
+
+A microservice architecture is not required for the MVP.
+
+---
+
+### 2.7.4 Budget Constraint
+
+Development and academic deployment should use free or low-cost infrastructure where practical.
+
+The current MVP shall not depend on unnecessary paid commercial services.
+
+---
+
+### 2.7.5 Schedule Constraint
+
+The project scope must remain achievable within the academic project schedule.
+
+When schedule pressure occurs:
+
+```text
+Reduce Optional Scope
+        ↓
+Protect Core Quality
+```
+
+Security, core workflow correctness, testing, and deployment shall not be sacrificed merely to preserve optional features.
+
+---
+
+### 2.7.6 Payment Constraint
+
+The MVP may use simulated payment.
+
+Real payment integration is not required.
+
+Actual financial credentials such as:
+
+- Card PIN
+- Bank password
+- Mobile financial service PIN
+
+shall not be required by the academic MVP.
+
+---
+
+### 2.7.7 Verification Constraint
+
+QR-linked Craft BD records shall not automatically be described as proof that a physical item is authentic.
+
+---
+
+### 2.7.8 Certification Constraint
+
+Craft BD platform certificate records shall not be represented as government certification without legitimate external authority.
+
+---
+
+### 2.7.9 Technology Constraint
+
+Implementation technologies shall be selected based on:
+
+- Project requirements
+- Team capability
+- Maintainability
+- Security
+- Deployment feasibility
+- Academic schedule
+
+A technology shall not be selected merely because it is fashionable.
+
+---
+
+## 2.8 Assumptions
+
+The current SRS is based on the following assumptions.
+
+### AS-01 — Browser Access
+
+A responsive web application is sufficient for the initial Customer, Artisan, and Administrator workflows.
+
+---
+
+### AS-02 — Internet Availability
+
+Users have sufficient internet access to use the web platform when performing online Craft BD activities.
+
+---
+
+### AS-03 — Artisan Browser Access
+
+Target artisans can access the platform through a supported desktop or mobile web browser.
+
+This assumption should be reviewed during artisan research.
+
+---
+
+### AS-04 — Relational Data Suitability
+
+Core Craft BD data such as users, artisans, products, orders, custom requests, quotations, and reviews can be appropriately represented using a relational data model.
+
+---
+
+### AS-05 — Simulated Payment Sufficiency
+
+Simulated payment is sufficient for demonstrating the academic commerce workflow.
+
+---
+
+### AS-06 — External Services Are Optional
+
+The core application can operate without real payment, courier, external certification, and advanced analytics integrations.
+
+---
+
+### AS-07 — Structured Customization Value
+
+The structured custom-order workflow is assumed to provide sufficient value compared with informal customer-artisan communication.
+
+This assumption remains **unvalidated** and requires primary research.
+
+---
+
+## 2.9 Dependencies
+
+### 2.9.1 Authentication Dependency
+
+Protected functionality depends on successful authentication and authorization.
+
+```text
+Authentication
+      ↓
+Authorization
+      ↓
+Ownership
+      ↓
+Protected Action
+```
+
+---
+
+### 2.9.2 Artisan–Product Dependency
+
+Products managed by artisans depend on a valid artisan relationship.
+
+```text
+Artisan
+   ↓
+Product
+   ↓
+Discovery
+```
+
+---
+
+### 2.9.3 Standard Commerce Dependency
+
+```text
+Product
+   ↓
+Cart
+   ↓
+Checkout
+   ↓
+Order
+```
+
+A valid standard order therefore depends on valid product and customer information.
+
+---
+
+### 2.9.4 Review Dependency
+
+Product-review eligibility depends on the approved purchase condition.
+
+```text
+Customer
+   ↓
+Eligible Purchase
+   ↓
+Review
+```
+
+---
+
+### 2.9.5 Custom Order Dependency
+
+```text
+Customer + Artisan
+       ↓
+Custom Request
+       ↓
+Quotation
+       ↓
+Customer Approval
+       ↓
+Production
+```
+
+Production is dependent on quotation approval.
+
+---
+
+### 2.9.6 Verification Dependency
+
+```text
+Product
+   ↓
+Verification Record
+   ↓
+Verification Identifier
+   ↓
+QR Reference
+```
+
+The verification module therefore depends on stable product records.
+
+---
+
+### 2.9.7 Certificate Dependency
+
+Certificate functionality depends on:
+
+- Valid product
+- Authorized administration
+- Approved certificate model
+
+It remains optional.
+
+---
+
+## 2.10 Research and Validation Dependencies
+
+Several product requirements remain dependent on primary research.
+
+### High-Priority Validation Areas
+
+- Structured custom-order usefulness
+- Artisan willingness to manage structured requests
+- Artisan willingness to update workflow statuses
+- Customer value from quotation approval
+- Craft-context usefulness
+- QR-linked product-record usefulness
+
+Until primary evidence is available, related requirements shall remain marked as provisional where applicable.
+
+---
+
+## 2.11 Third-Party Dependencies
+
+The current MVP intentionally minimizes third-party dependency.
+
+### Required Infrastructure Categories
+
+The system may require:
+
+- Deployment hosting
+- Relational database hosting
 - Persistent file/image storage
-- Internet-connected deployment environment
 
-Final technology choices will be documented during architecture design.
+### Optional External Services
 
----
+- Email provider
 
-## 2.5 Design and Implementation Constraints
+### Deferred External Services
 
-[To be completed]
+- Real payment gateway
+- Courier/logistics API
+- External certification authority
+- Advanced analytics provider
 
-This section will include approved constraints such as:
-
-- Responsive web application
-- Small-team-manageable architecture
-- Low-cost academic deployment
-- No mandatory microservices
-- No native mobile application requirement
-- Simulated payment permitted
-- No blockchain requirement
-- No mandatory courier integration
+Failure to implement a deferred integration shall not be considered failure of the core MVP.
 
 ---
 
-## 2.6 Assumptions and Dependencies
+## 2.12 Scope Boundary
 
-[To be completed]
+Craft BD is responsible for digital workflow and information management.
 
-This section will document assumptions such as:
+Craft BD may:
 
-- Browser-based access is sufficient for the MVP
-- Artisan mobile-browser usability is important
-- External integrations are minimized
-- Primary user research is still pending for some provisional requirements
+```text
+Record production status
+```
+
+but does not:
+
+```text
+Physically manufacture the product
+```
+
+Craft BD may:
+
+```text
+Record quality-check status
+```
+
+but does not:
+
+```text
+Physically inspect the product
+```
+
+Craft BD may:
+
+```text
+Record shipment status
+```
+
+but does not:
+
+```text
+Operate a courier service
+```
+
+Craft BD may:
+
+```text
+Display a QR-linked platform record
+```
+
+but does not automatically:
+
+```text
+Prove physical authenticity
+```
+
+These boundaries prevent the SRS from claiming capabilities that the software itself cannot perform.
 
 ---
 
-## 2.7 Requirement Validation Boundary
+## 2.13 Product Evolution Direction
 
-[To be completed]
+Potential future evolution may include:
 
-This section will explicitly separate:
+- Real payment integration
+- Courier integration
+- Improved recommendations
+- Expanded craft-content features
+- Events/workshops
+- External certification
+- Advanced analytics
+- Native applications
 
-- Controlled requirements
-- Provisional requirements
-- Deferred requirements
+These possibilities are not commitments in the current MVP.
 
-Primary user research dependencies will be recorded here.
+They require future requirement-change review before implementation.
 
 ---
+
+## 2.14 Overall Product Principle
+
+The initial Craft BD release should prioritize:
+
+```text
+Complete Core Workflow
+        +
+Security
+        +
+Traceability
+        +
+Testing
+        +
+Deployment
+```
+
+over:
+
+```text
+Large Feature Count
+```
+
+The success of the academic MVP should therefore be evaluated by the completeness and engineering quality of the approved workflows rather than the number of optional features implemented.
+
+---
+
+## Section Status
+
+**Section:** 2 — Overall Description  
+**Status:** Draft v0.1 Complete  
+**Requirement Baseline:** v0.1  
+**New Functional Requirements Introduced:** None  
+**Primary Research Dependency:** Explicitly preserved  
+**Next Section:** External Interface Requirements
 
 # 3. External Interface Requirements
 
