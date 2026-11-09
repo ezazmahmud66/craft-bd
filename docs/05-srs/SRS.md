@@ -6191,90 +6191,1164 @@ These rules shall be considered alongside the functional requirements rather tha
 **Next Section:** Data Requirements
 # 6. Data Requirements
 
-Data requirements use:
+# 6. Data Requirements
+
+## 6.1 Purpose
+
+This section defines the information Craft BD must store, relate, preserve, or validate in order to support the approved system workflows.
+
+Data requirements use the format:
 
 `DR-MODULE-NNN`
 
----
+These requirements describe required data behavior and relationships.
 
-## 6.1 User Data
+They do not yet define:
 
-`DR-USER-*`
+- Final database table names
+- Final column names
+- SQL types
+- Indexes
+- Physical storage engine
+- Final normalization decisions
 
-[To be completed]
-
----
-
-## 6.2 Artisan Data
-
-`DR-ART-*`
-
-[To be completed]
+Those decisions will be completed during database design.
 
 ---
 
-## 6.3 Product Data
+## 6.2 Data Design Principles
 
-`DR-PROD-*`
+Craft BD data shall follow the following principles:
 
-[To be completed]
-
----
-
-## 6.4 Cart and Order Data
-
-`DR-CART-*`  
-`DR-ORDER-*`
-
-[To be completed]
+- Core records shall have stable identifiers.
+- Relationships shall remain valid.
+- Historical transaction information shall be preserved where necessary.
+- Public and private information shall remain distinguishable.
+- Optional features shall not create unnecessary mandatory data dependencies.
+- Security and privacy requirements shall apply to data access.
+- Client-supplied identifiers shall not automatically grant access to records.
 
 ---
 
-## 6.5 Custom Order and Quotation Data
+# 6.3 User Data Requirements
 
-`DR-CUSTOM-*`
+### DR-USER-001 — Unique User Identifier
 
-[To be completed]
+Each registered user account shall have a unique system identifier.
 
----
+**Priority:** Must  
+**Status:** DRAFT
 
-## 6.6 Review Data
-
-`DR-REV-*`
-
-[To be completed]
+The identifier shall support relationships between the user and relevant Craft BD records.
 
 ---
 
-## 6.7 Notification Data
+### DR-USER-002 — User Role
 
-`DR-NOTIF-*`
+Each active user account shall be associated with an approved role or permission model.
 
-[To be completed]
+Initial roles include:
+
+- CUSTOMER
+- ARTISAN
+- ADMIN
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+- `FR-AUTH-005`
+- `SR-AUTHZ-002`
+
+---
+
+### DR-USER-003 — Authentication Data
+
+The system shall maintain the authentication data required to identify registered users without storing readable plain-text passwords.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+`SR-AUTH-001`
 
 ---
 
-## 6.8 Verification / Certificate Data
+### DR-USER-004 — Customer Profile Data
 
-`DR-VERIFY-*`  
-`DR-CERT-*`
+The system shall maintain the approved customer-profile information required for supported Customer workflows.
 
-[To be completed]
+**Priority:** Should  
+**Status:** DRAFT
+
+The final field list will be defined during data-model design.
+
+---
+
+# 6.4 Artisan Data Requirements
+
+### DR-ART-001 — Artisan Profile Record
+
+Each Artisan account shall be associated with an Artisan profile containing approved profile information.
+
+Possible information includes:
+
+- Name
+- Region/location
+- Expertise
+- Experience
+- Biography
+- Profile image reference
+
+**Priority:** Must  
+**Status:** DRAFT
 
 ---
 
-## 6.9 Data Integrity Requirements
+### DR-ART-002 — Artisan–Product Relationship
 
-[To be completed]
+Each Artisan-managed Product shall reference the Artisan responsible for that Product.
 
-This section will summarize:
+**Priority:** Must  
+**Status:** DRAFT
 
-- Entity relationships
-- Referential integrity
-- Historical transaction preservation
-- Deactivation vs destructive deletion principles
+This relationship supports:
+
+- Product ownership
+- Public artisan-product display
+- Authorization
+- Product management
 
 ---
+
+# 6.5 Product Data Requirements
+
+### DR-PROD-001 — Unique Product Identifier
+
+Each Product shall have a unique system identifier.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-PROD-002 — Required Product Information
+
+Each active standard Product shall contain the approved mandatory information required by the Product workflow.
+
+Potential mandatory information includes:
+
+- Product name
+- Price
+- Description
+- Category
+- Artisan relationship
+- Availability/stock information where applicable
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-PROD-003 — Product Category Relationship
+
+Each categorized Product shall reference a valid Category record.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+`BR-PROD-002`
+
+---
+
+### DR-PROD-004 — Product Image References
+
+The system shall maintain the metadata or storage references necessary to associate approved Product images with the correct Product.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-PROD-005 — Product Status
+
+The system shall store sufficient status information to determine whether a Product is eligible for public display and normal ordering.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Possible conceptual states may include:
+
+- Active
+- Inactive
+
+The final implementation model will be defined later.
+
+---
+
+### DR-PROD-006 — Optional Product Context Information
+
+Where supported, a Product may store approved contextual information such as:
+
+- Material
+- Craft type
+- Region
+- Craft context
+
+**Priority:** Should  
+**Status:** DRAFT
+
+Some of these data fields remain dependent on provisional discovery requirements.
+
+---
+
+### DR-PROD-007 — Unique Category Identifier
+
+Each Category shall have a unique identifier.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-PROD-008 — Category Status
+
+Where Category deactivation is supported, the system shall maintain sufficient information to distinguish active and inactive categories.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+# 6.6 Cart Data Requirements
+
+### DR-CART-001 — Customer Cart Ownership
+
+Each persistent Customer cart shall be associated with the Customer who owns it.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+`BR-CART-001`
+
+---
+
+### DR-CART-002 — Cart Item Relationship
+
+Each Cart Item shall reference:
+
+- Cart
+- Product
+- Quantity
+
+and any other approved data required for the Cart workflow.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+The cart shall not be treated as the authoritative historical transaction record after order confirmation.
+
+---
+
+# 6.7 Standard Order Data Requirements
+
+### DR-ORDER-001 — Unique Order Identifier
+
+Each standard Order shall have a unique system identifier.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-ORDER-002 — Order–Customer Relationship
+
+Each standard Order shall belong to exactly one Customer account.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+`BR-ORDER-001`
+
+---
+
+### DR-ORDER-003 — Order Item Records
+
+Each confirmed Order shall contain one or more Order Item records representing the products included in that transaction.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-ORDER-004 — Transaction-Time Price
+
+Each Order Item shall preserve the price applicable when the Order was confirmed.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+- `FR-ORDER-007`
+- `BR-ORDER-007`
+
+---
+
+### DR-ORDER-005 — Order Status
+
+Each Order shall store its current approved workflow state.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-ORDER-006 — Order Timestamps
+
+The system shall maintain relevant timestamps for important Order events.
+
+Possible timestamps include:
+
+- Created at
+- Updated at
+- Delivered at where applicable
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### DR-ORDER-007 — Delivery Information
+
+The system shall maintain the delivery information required for an approved Order workflow.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related Privacy:
+
+`PR-DATA-003`
+
+Delivery data shall not be treated as public information.
+
+---
+
+### DR-ORDER-008 — Payment Status
+
+Where simulated or real payment status is supported, the system shall maintain the approved payment state associated with the Order.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+For the academic MVP, this may represent simulated payment only.
+
+---
+
+# 6.8 Custom Order Data Requirements
+
+The following requirements remain partly provisional because the structured custom-order workflow still requires primary validation.
+
+---
+
+### DR-CUSTOM-001 — Unique Custom Request Identifier
+
+Each Custom Request shall have a unique system identifier.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-002 — Custom Request Customer Relationship
+
+Each Custom Request shall be associated with the Customer who submitted it.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-003 — Assigned Artisan Relationship
+
+Each active Custom Request shall identify the Artisan responsible for reviewing or fulfilling the request.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+Related:
+
+- `BR-CUSTOM-003`
+- `SR-OWN-004`
+
+---
+
+### DR-CUSTOM-004 — Custom Requirement Data
+
+The system shall store the approved customization information submitted with a Custom Request.
+
+Possible fields include:
+
+- Product type
+- Design
+- Color
+- Size
+- Material
+- Quantity
+- Additional instructions
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-005 — Reference Image Relationship
+
+Where a Customer uploads a valid reference image, the system shall associate the approved file/storage reference with the correct Custom Request.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+Related:
+
+- `FR-CUSTOM-008`
+- `PR-DATA-005`
+
+---
+
+### DR-CUSTOM-006 — Custom Request Status
+
+Each Custom Request or resulting Custom Order shall maintain the authoritative current workflow state.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+# 6.9 Quotation Data Requirements
+
+### DR-CUSTOM-007 — Quotation Relationship
+
+Each Quotation shall reference the Custom Request for which it was created.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+Related:
+
+`BR-CUSTOM-004`
+
+---
+
+### DR-CUSTOM-008 — Quoted Price
+
+Each submitted Quotation shall maintain the valid quoted price.
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-009 — Completion Estimate
+
+Where required by the approved workflow, the Quotation shall maintain an estimated completion date or approved equivalent completion estimate.
+
+**Priority:** Provisional Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-010 — Quotation Decision
+
+The system shall maintain the Customer's approved Quotation decision.
+
+Possible conceptual values include:
+
+```text
+PENDING
+APPROVED
+REJECTED
+```
+
+**Priority:** Must  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CUSTOM-011 — Quotation Decision Timestamp
+
+The system should maintain the time at which the Customer approves or rejects a Quotation.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+# 6.10 Review Data Requirements
+
+### DR-REV-001 — Unique Review Identifier
+
+Each Review shall have a unique identifier.
+
+**Priority:** Must if review functionality is implemented  
+**Status:** DRAFT
+
+---
+
+### DR-REV-002 — Review–Customer Relationship
+
+Each Review shall remain associated with the Customer who submitted it.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-REV-003 — Review–Product Relationship
+
+Each Product Review shall reference the Product being reviewed.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+---
+
+### DR-REV-004 — Rating Data
+
+Where numerical ratings are supported, the Review shall store a value within the approved rating range.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+The final rating scale will be defined before implementation.
+
+---
+
+### DR-REV-005 — Review Content
+
+Where textual reviews are supported, the system shall maintain the approved Review content associated with the eligible Review record.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+# 6.11 Notification Data Requirements
+
+### DR-NOTIF-001 — Notification Ownership
+
+Each user Notification shall be associated with the account permitted to view that Notification.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+Related:
+
+- `BR-NOTIF-001`
+- `SR-OWN-005`
+
+---
+
+### DR-NOTIF-002 — Notification State
+
+Where notification read-state functionality is implemented, the system shall maintain sufficient information to distinguish unread and read Notifications.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### DR-NOTIF-003 — Notification Event Context
+
+A Notification should maintain sufficient approved context for the user to understand the related event without exposing unnecessary private information.
+
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+# 6.12 Verification Data Requirements
+
+Verification-related data remains conditional.
+
+---
+
+### DR-VERIFY-001 — Unique Verification Identifier
+
+Each active Verification Record shall contain a unique verification identifier.
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+---
+
+### DR-VERIFY-002 — Verification–Product Relationship
+
+Each Verification Record shall reference the relevant Craft BD Product.
+
+**Priority:** Should — Conditional  
+**Status:** PROVISIONAL
+
+---
+
+### DR-VERIFY-003 — Verification Status
+
+Where verification management is implemented, the system shall maintain sufficient status information to determine whether a Verification Record is active or inactive.
+
+**Priority:** Should  
+**Status:** PROVISIONAL
+
+---
+
+# 6.13 Certificate Data Requirements
+
+Certificate-related data remains optional.
+
+---
+
+### DR-CERT-001 — Unique Certificate Identifier
+
+Each Craft BD Platform Certificate Record shall have a unique identifier.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CERT-002 — Certificate–Product Relationship
+
+Each Certificate Record shall reference the relevant eligible Product.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CERT-003 — Certificate Metadata
+
+Where implemented, the system may maintain approved Certificate metadata such as:
+
+- Artisan
+- Region
+- Materials
+- Issue date
+- Verification reference
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+---
+
+### DR-CERT-004 — Certificate Status
+
+Where Certificate management is implemented, the system shall maintain sufficient status information to distinguish active, inactive, or revoked records.
+
+**Priority:** Could  
+**Status:** PROVISIONAL
+
+---
+
+# 6.14 Administrative Audit Data Direction
+
+### DR-ADMIN-001 — Administrative Action Record
+
+For selected high-impact administrative actions, the system should maintain sufficient audit information to identify:
+
+- Action performed
+- Authorized actor
+- Affected resource
+- Relevant timestamp
+
+**Priority:** Should  
+**Status:** DRAFT
+
+Candidate actions include:
+
+- User deactivation
+- Content moderation
+- Verification deactivation
+- Certificate revocation
+- Exceptional order action
+
+The final audit schema will be defined during database and security design.
+
+---
+
+# 6.15 Core Data Relationship Direction
+
+The current high-level relationship model is:
+
+```text
+User
+ ├── Customer Profile
+ └── Artisan Profile
+         ↓
+       Product
+```
+
+Standard commerce:
+
+```text
+Customer
+   ↓
+Cart
+   ↓
+CartItem
+   ↓
+Product
+```
+
+and:
+
+```text
+Customer
+   ↓
+Order
+   ↓
+OrderItem
+   ↓
+Product
+```
+
+Custom workflow:
+
+```text
+Customer
+    +
+Artisan
+    ↓
+CustomRequest
+    ↓
+Quotation
+    ↓
+Workflow State
+```
+
+Supporting relationships:
+
+```text
+Product
+ ├── Review
+ ├── VerificationRecord*
+ └── CertificateRecord*
+```
+
+`*` Conditional / optional.
+
+These diagrams represent requirement relationships, not final database cardinality decisions.
+
+---
+
+# 6.16 Referential Integrity Requirements
+
+Core data relationships shall remain valid.
+
+Examples:
+
+```text
+Product
+→ valid Artisan
+```
+
+```text
+Order
+→ valid Customer
+```
+
+```text
+OrderItem
+→ valid Order
+```
+
+```text
+CustomRequest
+→ valid Customer
+```
+
+```text
+Quotation
+→ valid CustomRequest
+```
+
+```text
+Review
+→ valid Product
+```
+
+The system shall prevent or appropriately handle invalid orphan relationships.
+
+---
+
+# 6.17 Historical Data Integrity
+
+Transaction-related records may require historical preservation.
+
+Example:
+
+```text
+Current Product Price = ৳1,500
+```
+
+Customer confirms Order:
+
+```text
+Order Item Price = ৳1,500
+```
+
+Later Artisan changes Product price:
+
+```text
+Current Product Price = ৳1,800
+```
+
+The previous Order shall still retain:
+
+```text
+Order Item Price = ৳1,500
+```
+
+This supports:
+
+- Transaction integrity
+- Auditability
+- Correct order history
+
+---
+
+# 6.18 Deactivation vs Destructive Deletion
+
+Records involved in historical transactions should not be deleted in a way that destroys required transaction history.
+
+Example:
+
+```text
+Product used in completed Order
+        ↓
+Artisan stops selling Product
+```
+
+Preferred direction:
+
+```text
+Deactivate / Archive Product
+```
+
+rather than:
+
+```text
+Destroy Product and break Order history
+```
+
+The final soft-delete/archive strategy will be determined during database design.
+
+---
+
+# 6.19 Public and Private Data Classification
+
+Craft BD shall distinguish between public and private data.
+
+### Public / Potentially Public
+
+Examples:
+
+- Product name
+- Product description
+- Product price
+- Product image
+- Public artisan biography
+- Approved craft information
+- Published reviews
+
+### Private / Restricted
+
+Examples:
+
+- Authentication data
+- Customer delivery information
+- Private Custom Request information
+- Private reference images
+- Administrative audit data where restricted
+
+Privacy requirements govern access to these data categories.
+
+---
+
+# 6.20 Data Validation Principle
+
+Data shall not be accepted into persistent storage merely because it was submitted by the client.
+
+Relevant values shall be validated before persistence.
+
+Examples include:
+
+```text
+Product Price
+Quantity
+Stock
+Quotation Price
+Required Profile Fields
+Status Values
+Resource Identifiers
+```
+
+Related requirements include:
+
+- `SR-INPUT-*`
+- `NFR-DATA-*`
+
+---
+
+# 6.21 Client-Supplied Data Trust Boundary
+
+The client may submit:
+
+```text
+productId = 25
+quantity = 3
+total = 100
+```
+
+The authoritative backend shall independently verify:
+
+- Product exists
+- Product is available
+- Customer may perform the action
+- Quantity is valid
+- Authoritative price
+- Calculated total
+
+Therefore:
+
+```text
+Client Value
+≠ Automatically Trusted Data
+```
+
+---
+
+# 6.22 Data Privacy Boundary
+
+Access to stored data depends on:
+
+```text
+Authentication
+      ↓
+Role
+      ↓
+Ownership / Assignment
+      ↓
+Business Need
+      ↓
+Allowed Data
+```
+
+Example:
+
+Customer A may access:
+
+```text
+Customer A Order
+```
+
+but not:
+
+```text
+Customer B Order
+```
+
+Similarly, an Artisan may access Custom Request information only where authorized by the approved workflow.
+
+---
+
+# 6.23 Research Data Boundary
+
+Research participant data shall remain separate from normal production-data assumptions.
+
+Private research information shall not be published in the public repository without appropriate authorization.
+
+Synthetic personas shall not be stored or presented as real Customer records for evidence purposes.
+
+Related:
+
+`PR-DATA-010`
+
+---
+
+# 6.24 Academic Demo Data
+
+The public academic or portfolio deployment should use:
+
+- Synthetic data
+- Demo data
+- Properly authorized data
+
+where necessary to avoid exposing private real-user information.
+
+Related:
+
+`PR-DATA-009`
+
+---
+
+# 6.25 Database Design Boundary
+
+This SRS establishes required data concepts.
+
+Later database design will determine:
+
+```text
+Entity
+→ Table
+→ Column
+→ Data Type
+→ Key
+→ Constraint
+→ Relationship
+→ Index
+```
+
+No final SQL schema is approved by this section.
+
+---
+
+# 6.26 Data Requirement Traceability
+
+Examples:
+
+| Data Requirement | Supporting Functional Area |
+|---|---|
+| DR-ART-001 | FR-ART-001–004 |
+| DR-PROD-001–008 | FR-PROD-* / FR-DISC-* |
+| DR-CART-001–002 | FR-CART-* |
+| DR-ORDER-001–008 | FR-ORDER-* |
+| DR-CUSTOM-001–011 | FR-CUSTOM-* |
+| DR-REV-001–005 | FR-REV-* |
+| DR-NOTIF-001–003 | FR-NOTIF-* |
+| DR-VERIFY-001–003 | FR-VERIFY-* |
+| DR-CERT-001–004 | FR-CERT-* |
+
+---
+
+# 6.27 Data Verification Direction
+
+Future tests should validate cases such as:
+
+### Invalid Product Ownership
+
+Product references nonexistent Artisan.
+
+Expected:
+
+```text
+REJECT / PREVENT INVALID RELATIONSHIP
+```
+
+---
+
+### Invalid Order Access
+
+Customer requests another Customer's private Order.
+
+Expected:
+
+```text
+ACCESS DENIED
+```
+
+---
+
+### Invalid Quotation Relationship
+
+Quotation references nonexistent Custom Request.
+
+Expected:
+
+```text
+REJECT
+```
+
+---
+
+### Historical Price
+
+Product current price changes after Order confirmation.
+
+Expected:
+
+```text
+Historical Order price unchanged.
+```
+
+---
+
+### Invalid Status
+
+Unsupported workflow status value submitted.
+
+Expected:
+
+```text
+REJECT
+```
+
+---
+
+# 6.28 Data Requirement Summary
+
+| Data Area | Current Position |
+|---|---|
+| User | Core |
+| Artisan Profile | Core |
+| Product / Category | Core |
+| Cart | Core |
+| Standard Order | Core |
+| Custom Request / Quotation | Provisional Core |
+| Review | Should |
+| Notification | Should |
+| Verification | Conditional |
+| Certificate | Optional |
+| Administrative Audit | Should |
+
+---
+
+# 6.29 Section Decision
+
+The current Data Requirement baseline is sufficient to support later:
+
+```text
+Conceptual Data Model
+      ↓
+ERD
+      ↓
+Relational Schema
+      ↓
+Database Implementation
+      ↓
+Data Integrity Testing
+```
+
+However, this section does not lock the final database implementation.
+
+---
+
+## Section Status
+
+**Section:** 6 — Data Requirements  
+**Status:** Draft v0.1 Complete  
+**Source:** Phase 04 Data Requirement Baseline  
+**Final Database Schema:** Pending  
+**Data Requirement IDs Changed:** No  
+**New Product Requirements Introduced:** No  
+**Primary Research Dependency:** Preserved  
+**Next Section:** Security Requirements
 
 # 7. Security Requirements
 
