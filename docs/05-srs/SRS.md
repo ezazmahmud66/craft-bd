@@ -2763,35 +2763,742 @@ It does not mean that their user value has already been validated.
 **New Requirements Introduced:** No  
 **Research Boundary:** Preserved
 
-## 4.7 Shopping Cart
+## 4.7 Shopping Cart Requirements
 
-Requirements:
+### FR-CART-001 — View Cart
 
-`FR-CART-*`
+**Statement**
 
-[To be completed]
+The system shall allow an authenticated customer to view the products currently stored in their own shopping cart.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+The cart shall display applicable information including:
+
+- Product
+- Unit price
+- Quantity
+- Line total
+- Cart total
+
+A customer shall not receive another customer's private cart data.
+
+---
+
+### FR-CART-002 — Add Product to Cart
+
+**Statement**
+
+The system shall allow an authenticated customer to add an eligible available standard product to their own cart.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Business Rules:**
+
+- `BR-CART-001`
+- `BR-CART-003`
+
+**Acceptance Criteria**
+
+Given an eligible available product, when the customer submits a valid quantity, the product shall be added to the customer's cart.
+
+Unavailable or invalid products shall not be added successfully.
 
 ---
 
-## 4.8 Standard Order and Checkout
+### FR-CART-003 — Update Cart Quantity
 
-Requirements:
+**Statement**
 
-`FR-ORDER-*`
+The system shall allow an authenticated customer to update the quantity of an item in their own cart within approved availability limits.
 
-[To be completed]
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CART-002`
+
+**Acceptance Criteria**
+
+A valid quantity update shall:
+
+- Update the cart item
+- Recalculate the line total
+- Recalculate the cart total
+
+Invalid quantities shall be rejected.
 
 ---
 
-## 4.9 Review and Rating
+### FR-CART-004 — Remove Cart Item
 
-Requirements:
+**Statement**
 
-`FR-REV-*`
+The system shall allow an authenticated customer to remove an item from their own cart.
 
-[To be completed]
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+After successful removal:
+
+- The item shall no longer appear in the active cart
+- Cart totals shall be recalculated
 
 ---
+
+### FR-CART-005 — Calculate Cart Total
+
+**Statement**
+
+The system shall calculate the current cart total using authoritative product prices and valid cart quantities.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-CART-004`
+
+**Acceptance Criteria**
+
+The cart total shall equal the sum of valid cart-item line totals.
+
+Client-supplied total values shall not be treated as authoritative transaction totals.
+
+---
+
+## 4.8 Standard Order and Checkout Requirements
+
+### FR-ORDER-001 — Initiate Checkout
+
+**Statement**
+
+The system shall allow an authenticated customer with at least one eligible cart item to initiate checkout.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-ORDER-004`
+
+**Acceptance Criteria**
+
+Checkout shall not proceed when no eligible items are available for ordering.
+
+---
+
+### FR-ORDER-002 — Provide Delivery Information
+
+**Statement**
+
+The system shall allow the customer to provide the required delivery information for the order.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Privacy Dependency:** `PR-DATA-003`
+
+**Acceptance Criteria**
+
+Mandatory delivery information shall be validated before order confirmation is permitted.
+
+---
+
+### FR-ORDER-003 — Review Checkout Summary
+
+**Statement**
+
+The system shall allow the customer to review the order summary before final confirmation.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+The summary may include:
+
+- Products
+- Quantities
+- Prices
+- Total
+- Delivery information
+- Selected payment option
+
+**Acceptance Criteria**
+
+Viewing the checkout summary shall not automatically create a confirmed order.
+
+An explicit confirmation action shall be required.
+
+---
+
+### FR-ORDER-004 — Confirm Standard Order
+
+**Statement**
+
+The system shall allow the customer to confirm a valid standard order through the approved checkout workflow.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-ORDER-003`
+
+**Acceptance Criteria**
+
+A valid confirmation shall create a persistent order associated with the authenticated customer.
+
+---
+
+### FR-ORDER-005 — Create Order Record
+
+**Statement**
+
+The system shall create a uniquely identifiable order record after successful order confirmation.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Data:** `DR-ORDER-001`
+
+**Acceptance Criteria**
+
+The newly created order shall remain retrievable through approved authorized workflows.
+
+---
+
+### FR-ORDER-006 — Store Order Items
+
+**Statement**
+
+The system shall preserve the products and quantities included in a confirmed order as order-item records.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rule:** `BR-ORDER-002`
+
+**Acceptance Criteria**
+
+Changing the customer's cart after confirmation shall not alter the items already stored in the confirmed order.
+
+---
+
+### FR-ORDER-007 — Store Order Price Snapshot
+
+**Statement**
+
+The system shall preserve the applicable transaction-time price for each confirmed order item.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-ORDER-002`
+- `BR-ORDER-007`
+
+**Acceptance Criteria**
+
+A later change to the product's current price shall not change the stored price of an earlier confirmed order.
+
+---
+
+### FR-ORDER-008 — Clear Purchased Cart Items
+
+**Statement**
+
+The system shall remove successfully purchased items from the customer's active cart after successful order creation.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+Purchased items shall not remain as active duplicate cart entries unless intentionally added again later.
+
+---
+
+### FR-ORDER-009 — Assign Initial Order Status
+
+**Statement**
+
+The system shall assign an approved initial workflow state to each newly created standard order.
+
+**Priority:** Must  
+**Status:** DRAFT
+
+The exact initial state will be finalized in the standard-order state model.
+
+---
+
+### FR-ORDER-010 — Update Order Status
+
+**Statement**
+
+The system shall allow an authorized actor to update a standard order's status according to approved state-transition rules.
+
+**Actors:**
+
+- Authorized Artisan where applicable
+- Administrator where authorized
+
+**Priority:** Must  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-ORDER-005`
+- `BR-ORDER-006`
+
+**Acceptance Criteria**
+
+Valid authorized transitions shall be recorded.
+
+Invalid or unauthorized transitions shall be rejected.
+
+---
+
+### FR-ORDER-011 — View Own Order History
+
+**Statement**
+
+The system shall allow an authenticated customer to view their own standard-order history.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+The order-history interface shall not expose another customer's private order records.
+
+---
+
+### FR-ORDER-012 — View Order Details
+
+**Statement**
+
+The system shall allow an authenticated customer to view permitted details of an order they own.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+Order details may include:
+
+- Order identifier
+- Order items
+- Quantities
+- Prices
+- Total
+- Delivery information
+- Payment status
+- Order status
+
+**Related Security:** `SR-OWN-002`
+
+---
+
+### FR-ORDER-013 — Track Current Order Status
+
+**Statement**
+
+The system shall allow an authorized customer to view the current approved status of an order they own.
+
+**Actor:** Customer  
+**Priority:** Must  
+**Status:** DRAFT
+
+**Acceptance Criteria**
+
+The current stored state shall be displayed to the authorized customer.
+
+A different customer shall not receive private status information for the order.
+
+---
+
+### FR-ORDER-014 — Select Supported Payment Method
+
+**Statement**
+
+The system shall allow a customer to select from the payment methods supported by the academic MVP.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+For the current MVP, supported payment behavior may be simulated.
+
+---
+
+### FR-ORDER-015 — Record Simulated Payment Status
+
+**Statement**
+
+The system shall record the approved simulated payment status associated with an order.
+
+**Priority:** Should  
+**Status:** DRAFT  
+**Evidence:** TECHNICAL / ACADEMIC
+
+Possible states may include:
+
+```text
+PENDING
+PAID_SIMULATED
+FAILED_SIMULATED
+```
+
+The final payment-state model will be defined during design.
+
+---
+
+### FR-ORDER-016 — Display Payment Status
+
+**Statement**
+
+The system shall allow an authorized customer to view the payment status recorded for their own order.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+---
+
+### Real Payment Integration Boundary
+
+`IR-PAY-001`
+
+**Status:** DEFERRED
+
+Real payment-gateway integration is not required for the current academic MVP.
+
+If real payment is later approved, it shall require a separate integration specification and requirement-change review.
+
+---
+
+## 4.8.1 Standard Order State Direction
+
+The exact state machine will be finalized during UML/workflow design.
+
+The current provisional direction is:
+
+```text
+PENDING
+   ↓
+CONFIRMED
+   ↓
+PROCESSING
+   ↓
+READY_TO_SHIP
+   ↓
+SHIPPED
+   ↓
+DELIVERED
+```
+
+Possible terminal state:
+
+```text
+CANCELLED
+```
+
+Unnecessary status complexity should be avoided.
+
+---
+
+## 4.8.2 Standard Order Dependency
+
+The standard commerce workflow depends on:
+
+```text
+Customer
+   +
+Product
+   ↓
+Cart
+   ↓
+Checkout
+   ↓
+Order
+   ↓
+Order Status
+```
+
+The order workflow shall preserve:
+
+- Ownership
+- Price integrity
+- Product history
+- Valid state transitions
+
+---
+
+## 4.9 Review and Rating Requirements
+
+### FR-REV-001 — View Product Reviews
+
+**Statement**
+
+The system shall allow users to view eligible published reviews associated with a product.
+
+**Actors:**
+
+- Public User
+- Customer
+
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Privacy Rule:** `BR-REV-005`
+
+**Acceptance Criteria**
+
+Published reviews shall not expose private customer information beyond approved public reviewer information.
+
+---
+
+### FR-REV-002 — Submit Product Rating
+
+**Statement**
+
+The system shall allow an eligible authenticated customer to submit a rating for a product associated with an approved eligible purchase.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Requirements:**
+
+- `BR-REV-001`
+- `SR-AUTHZ-008`
+
+**Acceptance Criteria**
+
+An eligible customer shall be able to submit a valid rating.
+
+An ineligible customer shall be prevented from submitting the rating successfully.
+
+---
+
+### FR-REV-003 — Submit Product Review
+
+**Statement**
+
+The system shall allow an eligible authenticated customer to submit textual review content for a product associated with an approved eligible purchase.
+
+**Actor:** Customer  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Rule:** `BR-REV-001`
+
+**Acceptance Criteria**
+
+A valid eligible review shall remain associated with:
+
+- Customer
+- Product
+
+according to the approved review data model.
+
+---
+
+### FR-REV-004 — Prevent Unauthorized Review Modification
+
+**Statement**
+
+The system shall prevent an artisan from editing or deleting a legitimate customer review through normal artisan functionality.
+
+**Actor:** Artisan  
+**Priority:** Must if review functionality is implemented  
+**Status:** DRAFT
+
+**Related Rule:** `BR-REV-003`
+
+**Acceptance Criteria**
+
+An artisan shall not receive normal functionality to remove a legitimate review merely because the review is unfavorable.
+
+---
+
+### FR-REV-005 — Moderate Review
+
+**Statement**
+
+The system shall allow an authorized administrator to perform approved moderation actions on reviews that violate platform rules.
+
+**Actor:** Administrator  
+**Priority:** Should  
+**Status:** DRAFT
+
+**Related Rules:**
+
+- `BR-REV-004`
+- `BR-ADMIN-001`
+
+**Acceptance Criteria**
+
+Only an authorized administrative actor shall receive moderation capability.
+
+Moderation shall remain subject to approved platform rules.
+
+---
+
+## 4.9.1 Review Eligibility Boundary
+
+Review functionality depends on an approved eligibility condition.
+
+Current direction:
+
+```text
+Customer
+   ↓
+Eligible Purchase
+   ↓
+Review Permission
+```
+
+A review interface alone shall not determine eligibility.
+
+The backend shall enforce the approved rule.
+
+---
+
+## 4.9.2 Standard Order vs Custom Order
+
+These workflows remain separate.
+
+### Standard Order
+
+```text
+Existing Product
+→ Cart
+→ Checkout
+→ Confirmed Order
+```
+
+### Custom Order
+
+```text
+Customer Requirements
+→ Artisan Review
+→ Quotation
+→ Customer Approval
+→ Production
+```
+
+A custom-order request shall not automatically be treated as a standard confirmed order before the relevant custom workflow conditions are satisfied.
+
+---
+
+## 4.9.3 Commerce Security Dependencies
+
+The commerce requirements depend on:
+
+- Authentication
+- Authorization
+- Cart ownership
+- Order ownership
+- Input validation
+- Price integrity
+- State-transition rules
+- Review eligibility
+
+Example:
+
+```text
+Customer Browser sends total = 100
+```
+
+does not mean:
+
+```text
+Order total = 100
+```
+
+The authoritative backend shall calculate or verify transaction values according to approved business rules.
+
+---
+
+## 4.9.4 Functional Requirement Status Summary
+
+| Module | IDs | MVP Status |
+|---|---|---|
+| Cart | FR-CART-001–005 | Must |
+| Standard Order / Checkout | FR-ORDER-001–013 | Must / Should |
+| Simulated Payment | FR-ORDER-014–016 | Should |
+| Review | FR-REV-001–005 | Should with mandatory integrity controls |
+| Real Payment | IR-PAY-001 | Deferred |
+
+---
+
+## 4.9.5 Acceptance Test Direction
+
+Future tests should cover both positive and negative behavior.
+
+Examples:
+
+### Order Ownership
+
+Given Customer A owns an order.
+
+When Customer B attempts to access that order.
+
+Then:
+
+```text
+ACCESS DENIED
+```
+
+---
+
+### Historical Price
+
+Given a confirmed order stores a product price.
+
+When the artisan later changes the current product price.
+
+Then:
+
+```text
+Confirmed order price remains unchanged.
+```
+
+---
+
+### Review Eligibility
+
+Given a customer does not satisfy the approved purchase condition.
+
+When the customer attempts to review the product.
+
+Then:
+
+```text
+REVIEW REJECTED
+```
+
+---
+
+## Part Status
+
+**SRS Section:** 4 — Functional Requirements  
+**Completed Modules:** CART, ORDER, REV  
+**Status:** Draft v0.1  
+**Requirement IDs Changed:** No  
+**Real Payment:** Deferred  
+**New Requirements Introduced:** None  
+**Next Module:** Structured Custom Order
 
 ## 4.10 Structured Custom Order
 
