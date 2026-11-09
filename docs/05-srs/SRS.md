@@ -7358,404 +7358,247 @@ Security requirements use:
 
 ---
 
-## 7.1 Authentication Security
+# 7. Security Requirements
 
-`SR-AUTH-*`
+Craft BD shall enforce security at the authoritative backend level.
 
-[To be completed]
+Major security areas include:
 
----
+- Secure password hashing
+- Authentication
+- Server-side role authorization
+- Resource ownership validation
+- Input validation
+- Secure file upload handling
+- Secret/environment-variable management
+- Safe logging and error handling
+- HTTPS for deployed protected communication
+- Administrator authorization
+- Verification-record protection
 
-## 7.2 Authorization
+Protected operations shall follow:
 
-`SR-AUTHZ-*`
+```text
+Authentication
+→ Authorization
+→ Ownership / Assignment
+→ Business Rule
+→ Validation
+→ Action
+```
 
-[To be completed]
+Frontend controls such as hiding buttons shall not replace backend authorization.
 
----
+Passwords, API secrets, private keys, and production credentials shall not be committed to the repository.
 
-## 7.3 Ownership Enforcement
-
-`SR-OWN-*`
-
-[To be completed]
-
----
-
-## 7.4 Input Validation
-
-`SR-INPUT-*`
-
-[To be completed]
-
----
-
-## 7.5 File Upload Security
-
-`SR-FILE-*`
-
-[To be completed]
-
----
-
-## 7.6 Secret Management
-
-`SR-SECRET-*`
-
-[To be completed]
-
----
-
-## 7.7 Logging and Auditability
-
-`SR-LOG-*`
-
-[To be completed]
-
----
-
-## 7.8 Transport Security
-
-`SR-TRANSPORT-*`
-
-[To be completed]
-
----
-
-## 7.9 Administrator Security
-
-`SR-ADMIN-*`
-
-[To be completed]
-
----
-
-## 7.10 Verification Security
-
-`SR-VERIFY-*`
-
-[To be completed]
+Custom-order reference images and private transaction data shall only be available to authorized users.
 
 ---
 
 # 8. Privacy Requirements
 
-Privacy requirements use:
+Craft BD shall apply data minimization and purpose-based access.
 
-`PR-DATA-*`
+The system shall distinguish:
 
----
+**Public data**, such as:
 
-## 8.1 Data Minimization
+- Product information
+- Approved artisan profile information
+- Published reviews
+- Approved craft information
 
-[To be completed]
+from **private data**, such as:
 
----
+- Authentication information
+- Customer delivery data
+- Private custom-order information
+- Reference images
+- Restricted administrative information
 
-## 8.2 Public and Private Data Separation
+Customer order data shall not be exposed to another customer.
 
-[To be completed]
+Custom-order information shall normally be accessible only to:
 
----
+```text
+Request Owner
++
+Assigned Artisan
++
+Authorized Administrator where necessary
+```
 
-## 8.3 Customer Delivery Data
+Public academic demonstrations should use synthetic, demo, or properly authorized data.
 
-[To be completed]
-
----
-
-## 8.4 Custom Order Privacy
-
-[To be completed]
-
----
-
-## 8.5 Uploaded Reference Image Privacy
-
-[To be completed]
-
----
-
-## 8.6 Artisan Public Information
-
-[To be completed]
-
----
-
-## 8.7 Academic Demo and Research Privacy
-
-[To be completed]
+Synthetic personas shall never be presented as real research participants.
 
 ---
 
 # 9. Non-Functional Requirements
 
----
-
 ## 9.1 Performance
 
-Requirements:
+Under normal academic test conditions, common user-facing operations should respond within approximately 3 seconds for at least 90% of tested requests.
 
-`NFR-PERF-*`
+Search and common API operations should normally target approximately 2 seconds where practical.
 
-[To be completed]
-
----
+These are academic performance targets, not enterprise SLA claims.
 
 ## 9.2 Usability
 
-Requirements:
+The system should provide:
 
-`NFR-USE-*`
-
-[To be completed]
-
----
+- Responsive layouts
+- Clear navigation
+- Understandable validation messages
+- Visible action feedback
+- Simple artisan workflows
+- Accessible form labels
+- Keyboard-usable core interactions where practical
 
 ## 9.3 Reliability
 
-Requirements:
+The system shall protect persistent records from invalid state transitions and inconsistent transaction data.
 
-`NFR-REL-*`
-
-[To be completed]
-
----
+Failures shall provide understandable feedback without silently corrupting data.
 
 ## 9.4 Maintainability
 
-Requirements:
+The project shall use:
 
-`NFR-MNT-*`
-
-[To be completed]
-
----
+- Modular code organization
+- Git-based workflow
+- Environment configuration
+- Documentation
+- Coding conventions
+- Automated tests for critical workflows where practical
 
 ## 9.5 Compatibility
 
-Requirements:
-
-`NFR-COMP-*`
-
-[To be completed]
-
----
+The responsive web application shall support the project-approved modern desktop and mobile browsers.
 
 ## 9.6 Availability
 
-Requirements:
-
-`NFR-AVL-*`
-
-[To be completed]
-
----
+The deployed academic demo should remain accessible during planned project demonstrations, subject to the limitations of the selected hosting provider.
 
 ## 9.7 Scalability
 
-Requirements:
-
-`NFR-SCL-*`
-
-[To be completed]
-
----
+The MVP should support reasonable academic/demo growth without requiring unnecessary enterprise architecture.
 
 ## 9.8 Data Quality
 
-Requirements:
-
-`NFR-DATA-*`
-
-[To be completed]
-
----
+Required fields, relationships, identifiers, numeric values, and workflow states shall be validated.
 
 ## 9.9 Error Handling
 
-Requirements:
-
-`NFR-ERR-*`
-
-[To be completed]
+Errors shall be understandable to users while avoiding exposure of sensitive implementation details.
 
 ---
 
 # 10. Constraint Requirements
 
-Constraints use:
+Current constraints include:
 
-`CR-*`
+- Responsive web application
+- No native mobile application required
+- Small-team-manageable architecture
+- Low-cost academic deployment
+- No mandatory microservices
+- Relational database direction
+- Simulated payment permitted
+- Real financial credentials excluded
+- No unsupported authenticity claim
+- No unsupported government-certification claim
+- Optional scope shall be reduced before core quality
 
----
+Current preferred architecture direction remains:
 
-## 10.1 Platform Constraints
+```text
+Responsive Frontend
+→ REST-style API
+→ Modular Monolithic Backend
+→ Relational Database
+```
 
-`CR-PLATFORM-*`
-
-[To be completed]
-
----
-
-## 10.2 Architecture Constraints
-
-`CR-ARCH-*`
-
-[To be completed]
-
----
-
-## 10.3 Budget Constraints
-
-`CR-BUDGET-*`
-
-[To be completed]
-
----
-
-## 10.4 Schedule Constraints
-
-`CR-TIME-*`
-
-[To be completed]
-
----
-
-## 10.5 Scope Constraints
-
-`CR-SCOPE-*`
-
-[To be completed]
-
----
-
-## 10.6 Payment Constraints
-
-`CR-PAY-*`
-
-[To be completed]
-
----
-
-## 10.7 Verification and Certificate Constraints
-
-`CR-VERIFY-*`  
-`CR-CERT-*`
-
-[To be completed]
-
----
-
-## 10.8 Research Constraints
-
-`CR-RESEARCH-*`
-
-[To be completed]
+Final technologies will be approved during architecture design.
 
 ---
 
 # 11. Integration Requirements
 
-Integration requirements use:
+| Integration | Current Status |
+|---|---|
+| File/Image Storage | Required where uploads exist |
+| Email | Optional |
+| Real Payment Gateway | Deferred |
+| Courier/Logistics API | Deferred |
+| External Certification | Deferred |
+| External Analytics | Deferred |
 
-`IR-*`
-
----
-
-## 11.1 File Storage
-
-`IR-STORAGE-*`
-
-[To be completed]
-
----
-
-## 11.2 Email
-
-`IR-EMAIL-*`
-
-[To be completed]
+The core MVP shall not depend on deferred services.
 
 ---
 
-## 11.3 Payment Gateway
+# 12. Requirement Priority and MVP Scope
 
-`IR-PAY-*`
+## Must
 
-Status:
+Core areas include:
 
-**Deferred**
+- Authentication and authorization
+- Artisan profile
+- Product management
+- Product discovery
+- Cart
+- Standard ordering
+- Core administration
+- Security/privacy controls
+- Testing
+- Deployment
 
----
+## Provisional Must
 
-## 11.4 Logistics
+Structured Custom Order remains a provisional core workflow pending primary user validation.
 
-`IR-LOGISTICS-*`
+## Should
 
-Status:
+Examples include:
 
-**Deferred**
+- Customer profile
+- Selected filters
+- Reviews
+- Notifications
+- Craft context
+- QR-linked product record
 
----
+## Could
 
-## 11.5 External Certification
+Examples include:
 
-`IR-CERT-*`
+- Certificate records
+- Wishlist
+- Expanded product journey
+- Simple recommendation
 
-Status:
+## Deferred
 
-**Deferred**
+Examples include:
 
----
-
-## 11.6 Analytics
-
-`IR-ANALYTICS-*`
-
-Status:
-
-**Deferred**
-
----
-
-# 12. Requirement Priority and Scope
-
-## 12.1 Must-Have Requirements
-
-[To be completed]
-
----
-
-## 12.2 Provisional Must-Have Requirements
-
-[To be completed]
-
----
-
-## 12.3 Should-Have Requirements
-
-[To be completed]
-
----
-
-## 12.4 Could-Have Requirements
-
-[To be completed]
-
----
-
-## 12.5 Deferred Requirements
-
-[To be completed]
+- Real payment
+- Advanced AI recommendation
+- Gift recommendation
+- Events/workshops
+- Live chat
+- Blockchain verification
+- Courier integration
+- Native mobile app
+- Advanced analytics
 
 ---
 
 # 13. Requirement Dependencies
 
-[To be completed]
-
-Dependency models will include:
+Important dependency chains include:
 
 ```text
 Authentication
@@ -7775,165 +7618,227 @@ Artisan
 Customer + Artisan
 → Custom Request
 → Quotation
-→ Approval
+→ Customer Approval
 → Production
+```
+
+```text
+Eligible Purchase
+→ Review
+```
+
+```text
+Product
+→ Verification Record
+→ QR Reference
 ```
 
 ---
 
 # 14. Requirement Traceability
 
-## 14.1 Traceability Model
+Craft BD shall maintain the traceability direction:
 
 ```text
 Stakeholder
-→ Need / Pain Point
+→ Goal / Pain Point
 → Requirement
 → Business / Security Rule
 → Acceptance Criteria
 → Use Case
+→ Design
+→ Implementation
 → Test Case
 ```
 
----
+The detailed Requirement Traceability Matrix remains maintained in:
 
-## 14.2 Requirement Traceability Matrix
+`docs/04-requirements/requirement-traceability-matrix.md`
 
-[Reference to Phase 04 RTM]
-
-Detailed mappings will continue to be maintained in the dedicated traceability artifact rather than duplicated unnecessarily inside this SRS.
+Later phases shall extend the RTM with Use Case, UML, implementation, and testing references.
 
 ---
 
 # 15. Requirement Verification
 
-[To be completed]
+Requirements shall be verified using appropriate techniques including:
 
-Verification approaches may include:
-
+- Document review
 - Functional testing
+- Negative testing
 - Integration testing
 - Security testing
-- Negative testing
+- Authorization/ownership testing
 - Performance testing
 - Compatibility testing
 - Usability testing
 - UAT
-- Document review
+
+Example:
+
+```text
+Requirement
+FR-CUSTOM-028
+        ↓
+Rule
+Approval required before production
+        ↓
+Test
+Attempt production without approval
+        ↓
+Expected
+Transition rejected
+```
+
+Every critical workflow should include both positive and negative test cases.
 
 ---
 
 # 16. Deferred and Future Scope
 
-Current deferred areas include:
+The following are not implementation commitments for the current MVP:
 
 - Real payment gateway
 - Advanced AI recommendation
-- Gift recommendation
-- Event/workshop management
+- Gift engine
+- Events/workshops
 - Live chat
-- Blockchain verification
-- Courier API integration
+- Blockchain
+- Courier API
 - Native mobile application
-- External certification integration
+- External certification authority integration
 - Advanced analytics
 
-Any return to active scope requires requirement-change review.
+Future implementation requires requirement-change review.
 
 ---
 
 # 17. Research Validation Status
 
-[To be completed]
+Primary Customer and Artisan research remains incomplete.
 
-This section will identify requirements whose user-value validation remains incomplete.
+The following areas remain especially research-dependent:
 
-Key provisional areas currently include:
+- Structured custom-order usefulness
+- Artisan willingness to manage structured requests
+- Customer quotation/approval value
+- Craft-context usefulness
+- Material/craft-type filtering value
+- QR-linked product-record usefulness
 
-- Structured custom-order workflow
-- Craft-context importance
-- QR-linked product-record value
-- Recommendation requirements
+Therefore:
 
-Synthetic personas shall not be represented as primary research evidence.
+```text
+Documented Requirement
+≠ Automatically Validated User Need
+```
+
+Synthetic interviews or personas shall not count as primary research evidence.
 
 ---
 
 # 18. Requirement Change Management
 
-Requirement changes shall follow:
+Material requirement changes shall follow:
 
 `docs/04-requirements/requirement-change-control.md`
 
-Change Request IDs use:
+Change requests shall use:
 
-`CRQ-NNN`
+```text
+CRQ-NNN
+```
 
-Material changes must include impact analysis before implementation.
+Typical flow:
+
+```text
+Change Proposal
+→ Impact Analysis
+→ Decision
+→ Requirement Update
+→ Traceability Update
+→ Implementation
+→ Testing
+```
+
+Possible decisions:
+
+- APPROVED
+- REJECTED
+- DEFERRED
+- NEEDS_MORE_EVIDENCE
+
+Existing requirement IDs shall not be silently reused for unrelated behavior.
 
 ---
 
 # 19. Known Open Issues
 
-[To be completed]
+The following remain intentionally open for later phases:
 
-Potential open items include:
-
-- Primary customer research
-- Artisan/seller research
+- Primary Customer interviews
+- Primary Artisan/Seller interviews
 - Final custom-order validation
-- Final architecture choice
-- Final browser-support matrix
-- Final file-upload limits
-- Final data-retention policy
+- Final technology stack
+- Final architecture decisions
+- Final database schema
+- Final API contracts
 - Final standard-order state model
 - Final custom-order state model
+- Final browser support matrix
+- Final upload size/type limits
+- Final data-retention policy
+
+These open items do not prevent SRS v0.1 from serving as the controlled requirements reference.
 
 ---
 
 # 20. Supporting Information
 
-## 20.1 Related Project Documents
-
-[To be completed]
-
----
-
-## 20.2 Requirement Baseline References
-
-Primary source:
+Primary requirement source:
 
 `docs/04-requirements/requirement-baseline-v0.1.md`
 
+Supporting documentation:
+
+```text
+docs/01-discovery/
+docs/02-scope/
+docs/03-stakeholders/
+docs/04-requirements/
+```
+
+This SRS will provide input to:
+
+```text
+Phase 06 — Use Cases & User Stories
+Phase 07 — UML / System Analysis
+Phase 08 — UI/UX
+Phase 09 — Architecture
+Phase 10 — Database
+Phase 11 — API Design
+Implementation
+Testing
+UAT
+Deployment
+```
+
 ---
 
-## 20.3 Appendices
+# SRS Baseline Status
 
-Future appendices may include:
+**Document:** Craft BD Software Requirements Specification  
+**Version:** v0.1  
+**Status:** Controlled Draft Baseline  
+**Functional Requirements:** Included  
+**Business Rules:** Included  
+**Data Requirements:** Included  
+**Security & Privacy:** Included  
+**Non-Functional Requirements:** Included  
+**Constraints & Integrations:** Included  
+**Traceability Direction:** Included  
+**Deferred Scope:** Explicit  
+**Primary Research Dependency:** Explicit  
+**Unsupported Requirements Added:** No
 
-### Appendix A — Requirement ID Reference
-
-[To be completed]
-
-### Appendix B — Glossary
-
-[To be completed]
-
-### Appendix C — Deferred Requirement Register
-
-[To be completed]
-
-### Appendix D — Open Research Items
-
-[To be completed]
-
----
-
-# SRS Status
-
-**Current Version:** 0.1 Skeleton  
-**Requirement Baseline:** v0.1  
-**Detailed Requirements Added:** No  
-**Structure Locked:** Pending Review  
-**Primary Research Dependency:** Open  
-**Next Step:** SRS Introduction and Product Scope
+The SRS is now suitable to act as the formal requirement input for Use Case and UML/System Analysis phases.
